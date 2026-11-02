@@ -1,0 +1,265 @@
+import io
+import json
+import tempfile
+import unittest
+import zipfile
+from pathlib import Path
+from unittest import mock
+
+from motor import marca
+from motor.projecte import Projecte
+
+
+class AmbKits(unittest.TestCase):
+    """Cada prova té la seva carpeta ~/.tallat de mentida."""
+
+    def setUp(self):
+        self.dir = tempfile.TemporaryDirectory()
+        self.casa = Path(self.dir.name)
+        self.pegats = [mock.patch.object(marca, "KITS", self.casa / "kits"),
+                       mock.patch.object(marca, "USUARI", self.casa / "brand.json")]
+        for p in self.pegats:
+            p.start()
+
+    def tearDown(self):
+        for p in self.pegats:
+            p.stop()
+        self.dir.cleanup()
+
+
+class TestKits(AmbKits):
+    def test_l_estil_d_abans_es_converteix_en_el_primer_kit(self):
+        (self.casa / "fonts").mkdir()
+        (self.casa / "fonts" / "Lletra.otf").write_bytes(b"OTTO")
+        marca.USUARI.write_text(json.dumps({"subtitols": {"color": "#00FF00", "font": "Lletra",
+                                                          "font_fitxer": str(self.casa / "fonts" / "Lletra.otf")}}),
+                                encoding="utf-8")
+        self.assertEqual(marca.kits(), [{"id": "el-meu-estil", "nom": "El meu estil", "per_defecte": True, "colors": []}])
+        estil = marca.carrega()["subtitols"]
+        self.assertEqual(estil["color"], "#00FF00")
+        self.assertEqual(marca.fitxer_font(estil), marca.KITS / "el-meu-estil" / "fonts" / "Lletra.otf")
+        self.assertTrue(marca.USUARI.exists())  # el fitxer d'abans no es toca
+
+    def test_sense_estil_d_abans_el_primer_kit_es_neutre(self):
+        self.assertEqual(marca.carrega(), marca.carrega(marca.PER_DEFECTE))
+
+    def test_la_llista_porta_els_colors_de_la_mostra(self):
+        # La pàgina ensenya cada estil amb quatre colors (els que tingui triats).
+        marca.desa("marca", {"color_text": "#FFFFFF", "color_destacat": "#FFD60A", "color_fosc": "#111111"})
+        self.assertEqual(marca.kits()[0]["colors"], ["#FFFFFF", "#FFD60A"])
+
+    def test_crear_duplicar_canviar_el_nom_i_per_defecte(self):
+        marca.desa("subtitols", {"color": "#112233"})
+        neutre = marca.crea_kit("Neutre")
+        copia = marca.crea_kit("Còpia de l'Estil!", copia_de="el-meu-estil")
+        self.assertEqual(copia, "copia-de-l-estil")
+        self.assertEqual(marca.carrega(kit=copia)["subtitols"]["color"], "#112233")
+        self.assertEqual(marca.carrega(kit=neutre)["subtitols"]["color"], "#FFFFFF")
+        self.assertEqual(marca.crea_kit("Neutre"), "neutre-2")  # el nom es pot repetir; l'id, no
+        marca.canvia_nom(neutre, "  Net   i   clar ")
+        marca.fes_per_defecte(neutre)
+        self.assertEqual(marca.kits()[0], {"id": neutre, "nom": "Net i clar", "per_defecte": True, "colors": []})
+        self.assertEqual(marca.carrega()["subtitols"]["color"], "#FFFFFF")  # sense dir-ne cap: el per defecte
+        with self.assertRaises(ValueError):
+            marca.crea_kit("   ")
+        with self.assertRaises(KeyError):
+            marca.crea_kit("X", copia_de="no-existeix")
+        for dolent in ("../../etc", "El Meu", ""):
+            with self.assertRaises(KeyError):
+                marca.fes_per_defecte(dolent)
+
+    def test_esborrar_un_kit_el_guarda_a_part(self):
+        altre = marca.crea_kit("Altre")
+        with self.assertRaises(ValueError):
+            marca.esborra_kit("el-meu-estil")  # el per defecte no
+        desti = marca.esborra_kit(altre)
+        self.assertTrue((desti / "kit.json").exists())
+        self.assertEqual([k["id"] for k in marca.kits()], ["el-meu-estil"])
+
+    def test_exportar_i_importar(self):
+        marca.desa("subtitols", {"color": "#ABCDEF", "animacio": "fos"})
+        marca.desa_font("La Meva.otf", b"OTTO-font")
+        nom, contingut = marca.empaqueta_kit("el-meu-estil")
+        self.assertEqual(nom, "el-meu-estil.tallat-kit.zip")
+        nou = marca.importa_kit(contingut)
+        self.assertNotEqual(nou, "el-meu-estil")
+        self.assertEqual(next(k["nom"] for k in marca.kits() if k["id"] == nou), "El meu estil (importat)")
+        estil = marca.carrega(kit=nou)["subtitols"]
+        self.assertEqual((estil["color"], estil["animacio"], estil["font"]), ("#ABCDEF", "fos", "La Meva"))
+        self.assertEqual(marca.fonts_de(estil, kit=nou)[0]["fitxer"].read_bytes(), b"OTTO-font")
+
+    def test_un_kit_importat_no_pot_fer_mal(self):
+        memoria = io.BytesIO()
+        with zipfile.ZipFile(memoria, "w") as z:
+            z.writestr("kit.json", json.dumps({
+                "nom": "Kit estrany",
+                "subtitols": {"color": "#FF0000", "mida": 99, "animacio": "explota", "font": "x; } body {",
+                              "font_fitxer": "/etc/passwd"},
+                "broll": {"lut": "/etc/passwd", "durada": 1.0},
+                "secreta": {"x": 1}}))
+            z.writestr("../fora.otf", b"x")
+            z.writestr("fonts/../../fora.otf", b"x")
+            z.writestr("fonts/script.sh", b"x")
+            z.writestr("fonts/bona.ttf", b"TTF")
+        kit = marca.importa_kit(memoria.getvalue())
+        dades = json.loads((marca.KITS / kit / "kit.json").read_text(encoding="utf-8"))
+        self.assertEqual(dades["subtitols"], {"color": "#FF0000", "mida": 0.16})  # el que no s'entén, fora
+        self.assertEqual(dades["broll"], {"durada": 1.0})
+        self.assertNotIn("secreta", dades)
+        self.assertEqual(sorted(f.name for f in (marca.KITS / kit / "fonts").iterdir()), ["bona.ttf"])
+        self.assertFalse((self.casa / "fora.otf").exists() or (marca.KITS / "fora.otf").exists())
+        for dolent in (b"no soc cap zip", self._zip({"altres.txt": b"x"})):
+            with self.assertRaises(ValueError):
+                marca.importa_kit(dolent)
+
+    @staticmethod
+    def _zip(fitxers: dict) -> bytes:
+        memoria = io.BytesIO()
+        with zipfile.ZipFile(memoria, "w") as z:
+            for nom, contingut in fitxers.items():
+                z.writestr(nom, contingut)
+        return memoria.getvalue()
+
+
+def paraules(n: int) -> list[dict]:
+    return [{"id": i, "text": f"p{i}", "inici": i * 0.5, "final": i * 0.5 + 0.4, "frase": 0} for i in range(n)]
+
+
+class TestKitDelProjecte(AmbKits):
+    def projecte(self, carpeta: Path) -> Projecte:
+        carpeta.mkdir(parents=True, exist_ok=True)
+        (carpeta / "transcripcio.json").write_text(json.dumps(
+            {"video": str(carpeta / "no-hi-es.mov"), "fps": "30", "durada": 5.0, "paraules": paraules(10)}),
+            encoding="utf-8")
+        return Projecte(carpeta)
+
+    def test_cada_video_amb_el_seu_kit(self):
+        gran = marca.crea_kit("Gran")
+        marca.desa("subtitols", {"mida": 0.12}, kit=gran)
+        p = self.projecte(self.casa / "video")
+        self.assertEqual((p.kit(), p.estil_subtitols()["mida"]), ("el-meu-estil", 0.075))
+        p.tria_kit(gran)
+        self.assertEqual((p.kit(), Projecte(p.carpeta).estil_subtitols()["mida"]), (gran, 0.12))
+        with self.assertRaises(KeyError):
+            p.tria_kit("no-existeix")
+
+    def test_un_reel_fa_servir_el_kit_de_la_gravacio(self):
+        from motor import muntatge
+        gran = marca.crea_kit("Gran")
+        arrel = self.projecte(self.casa / "gravacio")
+        arrel.tria_kit(gran)
+        reel = Projecte(muntatge.crea_reel(arrel, {"id": "r", "paraules": [(2, 6)]}))
+        self.assertEqual(reel.kit(), gran)
+        reel.tria_kit("el-meu-estil")  # i el reel en pot triar un altre
+        self.assertEqual((Projecte(reel.carpeta).kit(), Projecte(arrel.carpeta).kit()), ("el-meu-estil", gran))
+
+    def test_si_el_kit_triat_ja_no_hi_es_fa_servir_el_per_defecte(self):
+        altre = marca.crea_kit("Altre")
+        p = self.projecte(self.casa / "video")
+        p.tria_kit(altre)
+        marca.esborra_kit(altre)
+        self.assertEqual(p.kit(), "el-meu-estil")
+
+
+class TestTitolDelProjecte(TestKitDelProjecte):
+    def test_el_titol_va_en_temps_del_muntatge(self):
+        p = self.projecte(self.casa / "video")
+        self.assertIsNone(p.titol())
+        p.estat["titol"] = {"text": "Hola\n*món*", "durada": None}
+        self.assertEqual(p.titol([(0.0, 1.0), (2.0, 4.0)]), {"text": "Hola\n*món*", "inici": 0.0, "final": 3.0})
+        p.estat["titol"]["durada"] = 9.0  # mai més llarg que el vídeo
+        self.assertEqual(p.titol([(0.0, 2.0)])["final"], 2.0)
+
+    def test_la_lletra_del_titol_tambe_va_al_render(self):
+        (marca.ruta().parent / "fonts").mkdir(exist_ok=True)
+        for nom in ("Inter__var.woff2", "Fraunces__var.woff2", "Anton__400.woff2"):
+            (marca.ruta().parent / "fonts" / nom).write_bytes(b"wOF2")
+        marca.desa("subtitols", {"font": "Inter"})
+        marca.desa("titol", {"font": "Fraunces"})
+        p = self.projecte(self.casa / "video")
+        self.assertEqual(sorted(f["familia"] for f in p.fonts_subtitols()), ["Fraunces", "Inter"])
+
+
+class TestMoment(TestKitDelProjecte):
+    def test_que_hi_ha_en_un_segon(self):
+        # Per quan la persona diu al xat «al segon 1 el títol…»: les paraules d'aquell moment i el que hi surt.
+        import argparse, contextlib, io
+        import tallat
+        p = self.projecte(self.casa / "video")
+        p.estat["esborrades"] = {0: "usuari", 1: "usuari"}
+        p.estat["titol"] = {"text": "Hola\n*món*", "durada": 2.0}
+        p.desa()
+        sortida = io.StringIO()
+        with contextlib.redirect_stdout(sortida):
+            tallat.ordre_moment(argparse.Namespace(projecte=str(p.carpeta), segons=0.3, esborrany=False))
+        text = sortida.getvalue()
+        self.assertIn("del muntatge d'ara", text)
+        self.assertIn("[0:p0]", text)  # la treta, entre claudàtors
+        self.assertIn("»2:p2", text)    # la que sona
+        self.assertIn("títol del ganxo", text)
+
+
+if __name__ == "__main__":
+    unittest.main()
+
+
+class TestEstilDelVideo(AmbKits):
+    """Cada vídeo pot canviar l'estil del seu kit sense tocar els altres (l'estat, «estil»)."""
+
+    def projecte(self, nom: str) -> Projecte:
+        carpeta = self.casa / nom
+        carpeta.mkdir()
+        (carpeta / "transcripcio.json").write_text(json.dumps(
+            {"video": "no-hi-es.mov", "fps": "30", "durada": 2.0,
+             "paraules": [{"id": 0, "text": "Hola.", "inici": 0.1, "final": 0.5, "frase": 0}]}), encoding="utf-8")
+        return Projecte(carpeta)
+
+    def test_els_estils_de_tot_el_video_no_porten_els_colors_ni_les_lletres(self):
+        estils = marca.estils_video()
+        self.assertGreaterEqual(len(estils), 4)
+        for e in estils:
+            self.assertIn(e["grafics"], marca.ESTILS_GRAFICS)
+            for seccio, treure in marca.DE_LA_MARCA.items():
+                self.assertFalse(treure & set(e[seccio]), (e["id"], seccio))
+            for seccio in ("subtitols", "titol", "broll"):  # tot el que hi ha es pot desar
+                marca.valida(seccio, e[seccio])
+
+    def test_un_video_canvia_el_seu_estil_i_els_altres_no(self):
+        marca.desa("marca", {"color_text": "#DDEEFF"})
+        a, b = self.projecte("a"), self.projecte("b")
+        revista = next(e for e in marca.estils_video() if e["id"] == "revista")
+        a.estat["estil"] = marca.neteja_estil_video({"subtitols": {**revista["subtitols"], "mida": 0.09, "inventat": 1},
+                                                     "titol": revista["titol"], "grafics": "editorial"})
+        a.desa()
+        a = Projecte(a.carpeta)
+        self.assertEqual(a.estil()["subtitols"]["mida"], 0.09)
+        self.assertEqual(a.estil()["subtitols"]["color"], "#DDEEFF")  # els colors de la marca, sempre
+        self.assertEqual(a.estil()["marca"]["energia"], ["editorial"])
+        self.assertNotIn("inventat", a.estat["estil"]["subtitols"])
+        self.assertNotEqual(b.estil()["subtitols"]["mida"], 0.09)  # l'altre vídeo, com el kit
+        # «Fes-lo servir en tots els vídeos»: al kit, i l'altre vídeo també el té.
+        marca.passa_al_kit(a.estat["estil"], kit=a.kit())
+        self.assertEqual(Projecte(b.carpeta).estil()["subtitols"]["mida"], 0.09)
+        self.assertEqual(Projecte(b.carpeta).estil()["marca"]["energia"], ["editorial"])
+
+    def test_els_colors_i_les_lletres_de_la_marca_manen(self):
+        # Un estil de títol triat abans hi havia deixat els seus colors: la marca hi passa al damunt.
+        marca.desa("marca", {"color_text": "#DDEEFF", "color_fosc": "#223344"})
+        marca.desa("titol", {"color": "#FFFFFF", "clau_color": "#FF5A36", "contorn": "#000000", "majuscules": True})
+        a = self.projecte("a")
+        titol = a.estil()["titol"]
+        self.assertEqual((titol["color"], titol["clau_color"], titol["contorn"]), ("#DDEEFF", "#DDEEFF", "#223344"))
+        self.assertTrue(titol["majuscules"])  # la resta, com al kit
+        # Un vídeo encara ho pot canviar per a ell sol.
+        a.estat["estil"] = {"titol": {"clau_color": "#55AA77"}}
+        self.assertEqual(a.estil()["titol"]["clau_color"], "#55AA77")
+
+    def test_fes_lo_servir_en_tots_no_perd_els_colors_canviats_en_un_video(self):
+        # Al kit, la marca hi passa al damunt: el color canviat en aquest vídeo s'hi ha de quedar (al vídeo).
+        marca.desa("marca", {"color_text": "#DDEEFF"})
+        a = self.projecte("a")
+        queda = marca.passa_al_kit({"subtitols": {"color": "#55AA77", "mida": 0.09}}, kit=a.kit())
+        self.assertEqual(queda, {"subtitols": {"color": "#55AA77"}})
+        self.assertEqual(marca.carrega(kit=a.kit())["subtitols"]["mida"], 0.09)
+        a.estat["estil"] = queda
+        self.assertEqual((a.estil()["subtitols"]["color"], a.estil()["subtitols"]["mida"]), ("#55AA77", 0.09))

@@ -1,0 +1,1731 @@
+/* tallat · pàgina de revisió.
+   Marca neutra: tipografia i colors del sistema (San Francisco al Mac).
+   Espais en una escala de 4 px; mides de lletra en rem perquè segueixin la mida de
+   text que tingui configurada cada persona. L'espaiat entre lletres es deixa en
+   «normal»: el Safari ja aplica el de San Francisco per a cada mida. */
+
+:root {
+  color-scheme: light dark;
+
+  /* Espais (escala de 4 px) */
+  --e1: 4px; --e2: 8px; --e3: 12px; --e4: 16px; --e5: 20px; --e6: 24px; --e7: 28px; --e8: 32px;
+
+  /* Mides de lletra (com les de macOS) */
+  --t-peu: 0.75rem;       /* 12: el més petit que es llegeix bé */
+  --t-petit: 0.8125rem;   /* 13 */
+  --t-ui: 0.8125rem;      /* 13: controls i llistes */
+  --t-cos: 0.9375rem;     /* 15 */
+  --t-lectura: 1.1875rem; /* 19: el text que s'edita */
+  --t-titol: 1.375rem;    /* 22 */
+  --t-xifra: 1.75rem;     /* 28 */
+
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", system-ui, "Helvetica Neue", sans-serif;
+
+  /* Colors del sistema (clar) */
+  --fons: #f5f5f7;
+  --superficie: #ffffff;
+  --barra: rgba(236, 236, 240, 0.78);
+  --vidre: rgba(255, 255, 255, 0.72);
+  --text: #1d1d1f;
+  /* Els grisos i el blau del text, prou foscos per llegir-se en lletra petita (4,5 a 1 sobre el fons de la columna) */
+  --text-2: #5f5f64;
+  --text-3: #737378;
+  --linia: rgba(0, 0, 0, 0.1);
+  --omplir: rgba(120, 120, 128, 0.12);
+  --omplir-fort: rgba(120, 120, 128, 0.2);
+  --accent: #0071e3;
+  --accent-suau: rgba(0, 113, 227, 0.12);
+  --accent-text: #0059b3;  /* el blau de les lletres (enllaços, temps): el de fons és massa clar en lletra petita */
+  --tret: #86868b;
+  --auto: #c93400;
+  --auto-suau: rgba(255, 149, 0, 0.14);
+  --verd: #1f7a35;
+  --verd-suau: rgba(52, 199, 89, 0.16);
+  /* El fons dels números de les notes (la lletra és blanca): prou foscos també en mode fosc */
+  --num-gris: var(--text-3);
+  --num-verd: var(--verd);
+  --num-taronja: var(--auto);
+  --proposta: #a05a00;
+  --proposta-ratlla: #ffcc00;
+  --proposta-suau: rgba(255, 204, 0, 0.22);
+  --focus: rgba(0, 113, 227, 0.45);
+  --ombra: 0 1px 2px rgba(0, 0, 0, 0.06), 0 8px 24px rgba(0, 0, 0, 0.08);
+  --ombra-gran: 0 2px 6px rgba(0, 0, 0, 0.08), 0 24px 64px rgba(0, 0, 0, 0.18);
+
+  --radi-petit: 6px;
+  --radi: 8px;
+  --radi-mitja: 12px;
+  --radi-gran: 20px;
+  --molla: cubic-bezier(0.22, 1, 0.36, 1); /* sense rebot: per a la interfície */
+
+  /* Amplada de les columnes (la persona les pot canviar arrossegant-ne la vora) */
+  --amplada-barra: 288px;
+  --amplada-reproductor: 400px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fons: #1c1c1e;
+    --superficie: #2c2c2e;
+    --barra: rgba(44, 44, 46, 0.78);
+    --vidre: rgba(28, 28, 30, 0.72);
+    --text: #f5f5f7;
+    --text-2: #aeaeb2;
+    --text-3: #8e8e93;
+    --linia: rgba(255, 255, 255, 0.12);
+    --omplir: rgba(120, 120, 128, 0.24);
+    --omplir-fort: rgba(120, 120, 128, 0.36);
+    --accent: #0071e3;  /* la lletra blanca dels botons, també en fosc (amb el #0a84ff, 3,7 a 1) */
+    --accent-suau: rgba(10, 132, 255, 0.22);
+    --accent-text: #66b2ff;
+    --num-gris: #737378;
+    --num-verd: #1f7a35;
+    --num-taronja: #c93400;
+    --tret: #8e8e93;
+    --auto: #ff9f0a;
+    --auto-suau: rgba(255, 159, 10, 0.16);
+    --verd: #30d158;
+    --verd-suau: rgba(48, 209, 88, 0.18);
+    --proposta: #ffd60a;
+    --proposta-ratlla: #ffd60a;
+    --proposta-suau: rgba(255, 214, 10, 0.18);
+    --focus: rgba(10, 132, 255, 0.6);
+    --ombra: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
+    --ombra-gran: 0 2px 6px rgba(0, 0, 0, 0.4), 0 24px 64px rgba(0, 0, 0, 0.55);
+  }
+}
+
+* { box-sizing: border-box; }
+
+html { font-size: 100%; height: 100%; }
+
+body {
+  height: 100%;
+  margin: 0;
+  display: grid;
+  grid-template-columns: var(--amplada-barra) minmax(0, 1fr) var(--amplada-reproductor);
+  background: var(--fons);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: var(--t-ui);
+  line-height: 1.4;
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+button { font: inherit; color: inherit; -webkit-user-select: none; user-select: none; }
+.barra, .eines, .reproductor, .full { -webkit-user-select: none; user-select: none; }
+svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+kbd {
+  font: 500 var(--t-peu)/1 var(--font); padding: 2px var(--e1); border-radius: 4px;
+  border: 1px solid var(--linia); background: var(--superficie); color: var(--text-2);
+}
+[hidden] { display: none !important; }
+
+/* Anell de focus visible només amb el teclat */
+:focus { outline: none; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: var(--radi-petit); }
+
+/* --- Barra lateral ---------------------------------------------------------- */
+
+.barra {
+  height: 100vh;
+  overflow-y: auto;
+  padding: var(--e6) var(--e5) var(--e8);
+  background: var(--barra);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  border-right: 1px solid var(--linia);
+}
+.marca { margin: 0 0 var(--e1); font-size: var(--t-petit); font-weight: 600; color: var(--text-2); }
+/* Edita · Revisa, sempre a dalt a l'esquerra. A Edita, a dalt de la columna, i no se'n va en baixar-la. */
+.cap-estacions {
+  position: sticky; top: calc(-1 * var(--e6)); z-index: 3;  /* el navegador l'enganxa a dins del farciment de la columna */
+  margin: calc(-1 * var(--e6)) calc(-1 * var(--e5)) var(--e2); padding: var(--e3) var(--e5) var(--e4);
+  background: var(--barra);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - var(--e3)), transparent);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - var(--e3)), transparent);
+}
+.eines .estacions.sense-columna { display: none; }
+body.sense-barra .eines .estacions.sense-columna { display: inline-flex; }
+.barra h1 { margin: 0; font-size: var(--t-titol); line-height: 1.2; font-weight: 700; overflow-wrap: anywhere; }
+.durades {
+  display: flex; align-items: baseline; gap: var(--e2);
+  margin: var(--e3) 0 0; font-size: var(--t-cos); color: var(--text-2); font-variant-numeric: tabular-nums;
+}
+.durades strong { color: var(--text); font-size: var(--t-xifra); line-height: 1.1; font-weight: 600; }
+.fletxa { margin: 0; }
+.detall { margin: var(--e1) 0 0; font-size: var(--t-petit); color: var(--text-2); }
+
+.seccio { margin-top: var(--e7); }
+.seccio h2 {
+  display: flex; align-items: baseline; gap: var(--e1);
+  margin: 0 0 var(--e2); font-size: var(--t-petit); font-weight: 600; color: var(--text-2);
+}
+.compte { color: var(--text-2); font-weight: 400; }
+.buit { margin: 0; font-size: var(--t-ui); color: var(--text-2); }
+.enllac {
+  margin-top: var(--e2); padding: 0; border: 0; background: none;
+  color: var(--accent-text); font-size: var(--t-ui); cursor: pointer;
+}
+.enllac:hover { text-decoration: underline; }
+.enllac:active { opacity: 0.6; }
+
+.grup-propostes + .grup-propostes { margin-top: var(--e4); }
+.grup-cap { display: flex; align-items: baseline; justify-content: space-between; gap: var(--e2); margin-bottom: var(--e1); }
+.grup-cap strong { font-size: var(--t-ui); font-weight: 600; }
+.grup-cap .accions { display: flex; gap: var(--e3); }
+.grup-cap .enllac { margin: 0; font-size: var(--t-petit); white-space: nowrap; }
+
+.item {
+  display: flex; align-items: center; gap: var(--e2);
+  min-height: 32px; padding: var(--e1) var(--e1) var(--e1) var(--e2); margin: 0 calc(-1 * var(--e2));
+  border-radius: var(--radi); font-size: var(--t-ui); cursor: pointer;
+  transition: background-color 120ms ease-out;
+}
+.item:hover { background: var(--omplir); }
+.item:active { background: var(--omplir-fort); }
+.item .context { flex: 1; min-width: 0; color: var(--text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.item .context b { color: var(--proposta); font-weight: 600; }
+.item .temps-petit { color: var(--text-2); font-size: var(--t-petit); font-variant-numeric: tabular-nums; }
+.mini {
+  flex: none; width: 28px; height: 28px; border-radius: 50%;
+  border: 0; background: var(--superficie); box-shadow: 0 0 0 1px var(--linia);
+  display: grid; place-items: center; cursor: pointer; color: var(--text-2);
+  transition: transform 100ms ease-out, background-color 120ms, color 120ms;
+}
+.mini svg { width: 13px; height: 13px; stroke-width: 2.2; }
+.mini:hover { color: var(--text); }
+.mini:active { transform: scale(0.88); }
+.mini.treu:hover { background: var(--auto-suau); color: var(--auto); }
+.mini.deixa:hover { background: var(--accent-suau); color: var(--accent-text); }
+
+
+.nova-regla { margin-top: var(--e2); }
+.nova-regla input {
+  width: 100%; height: 28px; padding: 0 var(--e3); border: 0; border-radius: var(--radi);
+  font: inherit; font-size: var(--t-ui); color: var(--text); background: var(--omplir);
+  -webkit-user-select: text; user-select: text;
+}
+.nova-regla input::placeholder { color: var(--text-3); }
+
+.tornar { display: block; margin: 0 0 var(--e3); }
+
+/* Els reels, en un desplegable sota el nom: què s'edita (el vídeo sencer o un dels reels). */
+.tria-reel { position: relative; margin-top: var(--e2); }
+.boto-reel {
+  display: flex; align-items: center; gap: var(--e2); max-width: 100%; min-height: 30px; padding: 0 var(--e3);
+  border: 0; border-radius: var(--radi); background: var(--omplir); color: var(--text);
+  font: inherit; font-size: var(--t-ui); font-weight: 600; cursor: pointer;
+}
+.boto-reel:hover { background: var(--omplir-fort); }
+.boto-reel #nom-reel { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.boto-reel .xebro { width: 12px; height: 12px; }
+.menu-reels {
+  position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 20; padding: 5px;
+  border-radius: var(--radi-mitja); background: var(--superficie); box-shadow: var(--ombra-gran), 0 0 0 0.5px var(--linia);
+}
+.menu-reels .item { margin: 0; }
+
+/* «Per revisar»: les instruccions de veu i les paraules proposades, cada grup amb el seu títol petit. */
+.grup-revisar h3 { margin: var(--e3) 0 var(--e1); font-size: var(--t-peu); font-weight: 600; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.04em; }
+.grup-revisar > .enllac { margin-top: var(--e2); }
+
+/* L'inici: el que queda al vídeo i, a Vesteix, una fila per panell amb el que hi ha triat. */
+.inici > .seccio:first-child { margin-top: var(--e5); }
+.mostra-estil.icona-fila { display: flex; align-items: center; justify-content: center; background: var(--accent-suau); color: var(--accent-text); }
+.icona-fila svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.fila-estil .punt { flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--auto); }
+
+/* Els estils (kits): la llista, i les accions al peu de la llista i del panell de cada estil. */
+.llista-kits { display: flex; flex-direction: column; }
+.llista-kits .fila-estil { margin-top: 0; }
+/* L'estil que fa servir el vídeo: una ✓ blava i el nom en blau (com a les llistes dels Ajustos del Mac). */
+.marca-actual { flex: none; width: 18px; height: 18px; color: var(--accent-text); stroke-width: 2.2; }
+.fila-estil.actual .fila-estil-text strong { color: var(--accent-text); font-weight: 600; }
+.accions-kit { display: flex; flex-direction: column; align-items: flex-start; gap: var(--e2); }
+.accions-kit .perill { color: var(--auto); }
+.accions-kit .perill.confirma { font-weight: 600; }
+.fila-estil + .fila-estil { margin-top: var(--e2); }
+
+/* Els panells d'estil: el bàsic a dalt; la resta, en grups que es pleguen. */
+.estils:not(.tots) > .estil:nth-child(n + 7) { display: none; }
+.mes-estils { align-self: flex-start; margin: calc(-1 * var(--e2)) 0 0; font-size: var(--t-petit); }
+.grup-estil { border-top: 0.5px solid var(--linia); padding-top: var(--e3); }
+.grup-estil > summary {
+  display: flex; align-items: center; justify-content: space-between; list-style: none; cursor: pointer;
+  font-size: var(--t-ui); font-weight: 600; color: var(--text);
+}
+.grup-estil > summary::-webkit-details-marker { display: none; }
+.grup-estil .xebro-grup { width: 14px; height: 14px; fill: none; stroke: var(--text-2); stroke-width: 1.8; transition: transform 160ms var(--molla); transform: rotate(-90deg); }
+.grup-estil[open] .xebro-grup { transform: none; }
+.grup-estil .cos-grup { display: flex; flex-direction: column; gap: var(--e5); margin-top: var(--e4); }
+.ajuda-camp { margin: 0; }
+.item.instruccio { align-items: flex-start; padding-top: var(--e2); padding-bottom: var(--e2); }
+.item.instruccio .reel-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.item.instruccio .ins-tipus { display: flex; align-items: baseline; gap: var(--e2); font-weight: 500; color: var(--text); }
+.item.instruccio .ins-tipus .temps-petit { font-weight: 400; }
+.item.instruccio .ins-text { color: var(--text-2); font-size: var(--t-petit); display: -webkit-box;
+  -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.item.instruccio .ins-estat { font-size: var(--t-peu); color: var(--text-2); }
+.item.instruccio.acceptada .ins-tipus { color: var(--accent-text); }
+.item.instruccio.descartada { opacity: 0.55; }
+.item.instruccio .mini.actiu { background: var(--accent); color: #fff; box-shadow: none; }
+/* Les que afegeix Claude ja són al vídeo: una etiqueta en lloc del botó d'acceptar. */
+.item.instruccio .al-video {
+  flex: none; align-self: center; padding: 2px var(--e2); border-radius: 999px; font-size: var(--t-peu); font-weight: 500;
+  color: var(--accent-text); background: var(--accent-suau); white-space: nowrap;
+}
+.item.instruccio .torna-ins { flex: none; align-self: center; margin: 0; font-size: var(--t-peu); }
+/* Les instruccions, d'una línia: el detall i les accions secundàries surten en passar-hi el ratolí. */
+.item.instruccio .ins-text { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.item.instruccio .ins-estat { display: none; }
+.item.instruccio .ins-estat.important,
+.item.instruccio:hover .ins-estat:not(:empty), .item.instruccio:focus-within .ins-estat:not(:empty) { display: block; }
+.item.instruccio:not(:hover):not(:focus-within) .discret { display: none; }
+.ins-accions { display: flex; align-items: center; flex-wrap: wrap; gap: var(--e2); margin-top: var(--e1); font-size: var(--t-petit); }
+.ins-accions .enllac { margin: 0; font-size: var(--t-petit); }
+.ins-accions .fet { color: var(--accent-text); font-weight: 500; }
+.ins-accions select {
+  max-width: 100%; height: 24px; border: 0; border-radius: var(--radi-petit); padding: 0 var(--e2);
+  font: inherit; font-size: var(--t-petit); color: var(--text); background: var(--omplir);
+}
+.item.instruccio.arrossegant { background: var(--accent-suau); box-shadow: inset 0 0 0 2px var(--accent); }
+.item.reel { align-items: flex-start; padding-top: var(--e2); padding-bottom: var(--e2); }
+.item.reel .reel-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.item.reel .reel-titol { color: var(--text); font-weight: 500; }
+.item.reel .reel-detall { color: var(--text-2); font-size: var(--t-petit); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.item.reel .reel-durada { flex: none; color: var(--text-2); font-size: var(--t-petit); font-variant-numeric: tabular-nums; padding-top: 1px; }
+.item.reel.obert { background: var(--accent-suau); }
+.item.reel.obert .reel-titol { color: var(--accent-text); }
+
+/* --- Text ------------------------------------------------------------------- */
+
+.text { height: 100vh; overflow-y: auto; position: relative; }
+
+.eines {
+  position: sticky; top: 0; z-index: 5;
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--e2) var(--e3);
+  padding: var(--e3) var(--e8) var(--e5);
+  background: var(--vidre);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  /* vora de desplaçament: el text s'esvaeix sota la barra en lloc d'una línia dura */
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - var(--e3)), transparent);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - var(--e3)), transparent);
+}
+.espai { flex: 1; }
+.grup { display: flex; align-items: center; gap: var(--e1); }
+
+/* La barreta: sobre les paraules marcades, què s'hi pot fer (Destaca, Corregeix, Treu), amb la drecera. */
+.barreta {
+  position: fixed; z-index: 30; display: flex; gap: 2px; padding: 4px; border-radius: var(--radi-mitja);
+  background: var(--text); box-shadow: var(--ombra-gran); animation: apareix 120ms ease-out;
+}
+.barreta[hidden] { display: none; }
+.barreta button {
+  display: flex; align-items: center; gap: 6px; min-height: 32px; padding: 0 10px; border: 0; border-radius: var(--radi);
+  background: none; color: var(--fons); font: inherit; font-size: var(--t-petit); font-weight: 500; cursor: pointer; white-space: nowrap;
+}
+.barreta button:hover:not(:disabled), .barreta button[aria-pressed="true"] { background: color-mix(in srgb, var(--fons) 18%, transparent); }
+.barreta button:disabled { opacity: 0.45; cursor: default; }
+.barreta kbd {
+  min-width: 0; padding: 0; border: 0; background: none; box-shadow: none;
+  font: inherit; font-size: var(--t-peu); color: color-mix(in srgb, var(--fons) 70%, transparent);
+}
+
+.transcripcio {
+  max-width: 760px; margin: 0 auto; padding: var(--e5) var(--e8) 50vh;
+  font-size: var(--t-lectura); line-height: 1.6;
+  /* El text se selecciona com sempre (arrossegant, doble clic, triple clic, ⇧ + clic) i ⌫ el treu.
+     Els silencis i les nanses no hi entren. */
+  user-select: text; -webkit-user-select: text;
+}
+.transcripcio .pausa, .transcripcio .nansa, .transcripcio .marca-temps { user-select: none; -webkit-user-select: none; }
+.transcripcio ::selection { background: var(--accent-suau); }
+.paragraf {
+  position: relative; margin: 0 0 var(--e4);
+  transition: font-size 200ms var(--molla), opacity 200ms ease-out, margin 200ms var(--molla);
+}
+/* Frases tretes senceres: es queden, però en un segon pla */
+.paragraf.tot-fora { font-size: var(--t-cos); line-height: 1.5; margin-bottom: var(--e2); opacity: 0.7; }
+.paragraf.tot-fora:hover { opacity: 1; }
+.marca-temps {
+  position: absolute; left: -96px; top: 0.3em; width: 60px; text-align: right;
+  font-size: var(--t-petit); line-height: 1.4; color: var(--text-2); font-variant-numeric: tabular-nums;
+  border: 0; background: none; padding: 0; cursor: pointer; opacity: 0;
+  transition: opacity 150ms ease-out, color 120ms;
+}
+.paragraf:hover .marca-temps, .marca-temps:focus-visible { opacity: 1; }
+.marca-temps:hover { color: var(--accent-text); }
+
+/* Moure paràgrafs: una nansa al marge esquerre */
+.transcripcio { position: relative; }
+.nansa {
+  position: absolute; left: -24px; top: 0.3em; width: 18px; height: 24px; padding: 0;
+  border: 0; border-radius: var(--radi-petit); background: none; color: var(--text-3);
+  display: grid; place-items: center; cursor: grab; opacity: 0; touch-action: none;
+  transition: opacity 150ms ease-out, background-color 120ms, color 120ms;
+}
+.nansa svg { width: 10px; height: 16px; fill: currentColor; stroke: none; }
+.paragraf:hover .nansa, .nansa:focus-visible { opacity: 1; }
+.nansa:hover { background: var(--omplir); color: var(--text); }
+.paragraf.mou { opacity: 0.35; }
+body.movent, body.movent * { cursor: grabbing !important; }
+.indicador-mou {
+  position: absolute; left: var(--e8); right: var(--e8); height: 3px; border-radius: 2px;
+  background: var(--accent); box-shadow: 0 0 0 3px var(--accent-suau); pointer-events: none;
+}
+
+.p {
+  border-radius: var(--radi-petit); padding: 1px 2px; margin: 0 -2px;
+  cursor: pointer;
+  transition: color 120ms ease-out, background-color 120ms ease-out, opacity 120ms ease-out;
+}
+.p:hover { background: var(--omplir); }
+.p.fora { color: var(--tret); text-decoration: line-through; text-decoration-thickness: 1.5px; }
+.p.fora.auto { color: var(--auto); text-decoration-color: var(--auto); }
+.p.proposta { box-shadow: inset 0 -2px 0 var(--proposta-ratlla); background: var(--proposta-suau); }
+.p.aprox:not(.fora) { text-decoration: underline dotted var(--text-2, currentColor); text-underline-offset: 3px; }
+.p.corregida { box-shadow: inset 0 -2px 0 var(--accent); }
+/* Les destacades sempre es veuen (no només en un mode): les que tries tu, en negreta, com fa ⌘B en un
+   document; les que tria tallat sol, una mica més gruixudes (n'hi ha moltes, i en negreta carregaven el text). */
+.p.clau { font-weight: 500; }
+.p.clau.clau-teva, .editor.clau { font-weight: 700; }
+.p.clau.fora { font-weight: inherit; }
+.p.actual { background: var(--accent); color: #fff; text-decoration-color: rgba(255, 255, 255, 0.7); }
+.p.seleccio:not(.actual) { background: var(--accent-suau); }  /* si també sona, es queda el blau fort (la lletra és blanca) */
+.p.llum { animation: llum 1.2s var(--molla); }
+@keyframes llum { 0% { background: var(--accent); color: #fff; } 100% { background: transparent; } }
+
+.pausa {
+  display: inline-block; vertical-align: 0.15em;
+  height: 18px; margin: 0 2px; padding: 0 6px;
+  border-radius: 9px; border: 0; cursor: pointer;
+  font-size: var(--t-peu); font-weight: 500; line-height: 18px; color: var(--text-2);
+  background: var(--omplir);
+  font-variant-numeric: tabular-nums;
+  transition: background-color 120ms, color 120ms;
+}
+.pausa { position: relative; }
+.pausa::before { content: ""; position: absolute; inset: -4px -2px; }  /* més fàcil de tocar: 26 px d'alt */
+.pausa:hover { color: var(--text); background: var(--omplir-fort); }
+/* Escurçat (el que passa sol), el silenci surt fluix, només amb la vora: no és res que s'hagi de fer.
+   Sencer (s'hi ha clicat), en blau. */
+.pausa:not(.sencera) { background: transparent; box-shadow: inset 0 0 0 1px var(--linia); }
+.pausa.sencera { background: var(--accent-suau); color: var(--accent-text); }
+
+.editor {
+  font: inherit; color: inherit;
+  border: 0; outline: 2px solid var(--accent); border-radius: var(--radi-petit);
+  background: var(--superficie); padding: 0 var(--e1); margin: 0 1px;
+}
+
+/* --- Controls comuns -------------------------------------------------------- */
+
+.segmentat {
+  display: inline-flex; padding: 2px; gap: 2px;
+  border-radius: var(--radi); background: var(--omplir);
+}
+.segmentat button {
+  border: 0; background: transparent; border-radius: var(--radi-petit);
+  height: 24px; padding: 0 var(--e3); font-size: var(--t-ui); font-weight: 500; color: var(--text-2);
+  cursor: pointer; white-space: nowrap;
+  transition: background-color 150ms ease-out, color 150ms ease-out, box-shadow 150ms;
+}
+.segmentat button:hover:not(:disabled):not([aria-checked="true"]) { color: var(--text); }
+.segmentat.ample { display: flex; width: 100%; }
+.segmentat[hidden] { display: none; }
+.segmentat.ample button { flex: 1; padding: 0 var(--e1); font-variant-numeric: tabular-nums; }
+.segmentat button[aria-checked="true"] {
+  background: var(--superficie); color: var(--text);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12), 0 0 0 0.5px rgba(0, 0, 0, 0.04);
+}
+.segmentat button:disabled { opacity: 0.4; cursor: default; }
+.segmentat button:active:not(:disabled) { transform: scale(0.97); }
+
+.boto {
+  border: 0; border-radius: var(--radi); height: 28px; padding: 0 var(--e3); white-space: nowrap;
+  font-size: var(--t-ui); font-weight: 500; cursor: pointer;
+  background: var(--omplir); color: var(--text);
+  transition: transform 100ms ease-out, background-color 120ms, filter 120ms, opacity 120ms;
+}
+.boto:hover { background: var(--omplir-fort); }
+.boto:active { transform: scale(0.97); }
+.boto.principal { background: var(--accent); color: #fff; }
+.boto.principal:hover { filter: brightness(1.08); }
+.boto:disabled { opacity: 0.45; cursor: default; transform: none; }
+
+.icona {
+  width: 32px; height: 32px; border: 0; border-radius: var(--radi);
+  background: transparent; display: grid; place-items: center; cursor: pointer;
+  color: var(--text-2);
+  transition: background-color 120ms, color 120ms, transform 100ms ease-out;
+}
+.icona svg { width: 18px; height: 18px; }
+.icona:hover { background: var(--omplir); color: var(--text); }
+.icona:active { transform: scale(0.92); }
+.icona:disabled { opacity: 0.35; cursor: default; background: none; transform: none; }
+
+.interruptor {
+  display: inline-flex; align-items: center; gap: var(--e2); border: 0; background: none;
+  padding: var(--e1) 0; font-size: var(--t-ui); color: var(--text); cursor: pointer; white-space: nowrap;
+}
+.interruptor .pista {
+  position: relative; width: 32px; height: 18px; border-radius: 9px; background: var(--omplir-fort);
+  transition: background-color 200ms ease-out;
+}
+.interruptor .bola {
+  position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%;
+  background: #fff; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25), 0 0 0 0.5px rgba(0, 0, 0, 0.04);
+  transition: transform 260ms var(--molla);
+}
+.interruptor:active .bola { transform: scaleX(1.15); }
+.interruptor[aria-checked="true"] .pista { background: var(--accent); }
+.interruptor[aria-checked="true"] .bola { transform: translateX(14px); }
+.interruptor[aria-checked="true"]:active .bola { transform: translateX(14px) scaleX(1.15); }
+
+/* --- Columnes: amagar-les i canviar-ne l'amplada --------------------------- */
+
+.barra { grid-column: 1; }
+.text { grid-column: 2; }
+.reproductor { grid-column: 3; }
+body.sense-barra { --amplada-barra: 0px !important; }
+body.sense-reproductor { --amplada-reproductor: 0px !important; }
+body.sense-barra .barra, body.sense-reproductor .reproductor { display: none; }
+body.sense-barra #divisor-barra, body.sense-reproductor #divisor-reproductor { display: none; }
+#commuta-barra[aria-pressed="true"], #commuta-reproductor[aria-pressed="true"] { color: var(--text); }
+
+.divisor {
+  position: fixed; top: 0; bottom: 0; z-index: 20; width: 9px; margin-left: -4px;
+  cursor: col-resize; touch-action: none;
+}
+#divisor-barra { left: var(--amplada-barra); }
+#divisor-reproductor { left: calc(100vw - var(--amplada-reproductor)); }
+.divisor::after {
+  content: ""; position: absolute; top: 0; bottom: 0; left: 4px; width: 1px;
+  background: transparent; transition: background-color 150ms ease-out;
+}
+.divisor:hover::after, .divisor.arrossegant::after { background: var(--accent); }
+.divisor:focus-visible { outline: none; }
+.divisor:focus-visible::after { background: var(--accent); width: 2px; }
+body.redimensionant, body.redimensionant * { cursor: col-resize !important; user-select: none; }
+
+/* --- Seccions de la barra lateral, plegables ------------------------------- */
+
+.seccio h2 .plega {
+  display: flex; align-items: center; gap: var(--e1); width: 100%; padding: 0; margin: 0 0 0 -18px;
+  border: 0; background: none; font: inherit; color: inherit; text-align: left; cursor: pointer;
+}
+.seccio h2 .plega:hover { color: var(--text); }
+.plega .xebro-seccio {
+  flex: none; width: 14px; height: 14px; color: var(--text-3); opacity: 0;
+  transition: transform 200ms var(--molla), opacity 150ms ease-out;
+  transform: rotate(90deg);
+}
+.barra:hover .plega .xebro-seccio, .plega:focus-visible .xebro-seccio, .seccio.plegada .xebro-seccio { opacity: 1; }
+.seccio.plegada .xebro-seccio { transform: none; }
+.seccio.plegada { margin-top: var(--e5); }
+.seccio.plegada > :not(h2) { display: none !important; }
+.seccio.plegada h2 { margin-bottom: 0; }
+
+/* --- Estil dels subtítols -------------------------------------------------- */
+
+.fila-estil {
+  display: flex; align-items: center; gap: var(--e3); width: calc(100% + 2 * var(--e2));
+  margin: var(--e2) calc(-1 * var(--e2)) 0; padding: var(--e2); border: 0; border-radius: var(--radi);
+  background: none; text-align: left; cursor: pointer; transition: background-color 120ms ease-out;
+}
+.fila-estil:hover { background: var(--omplir); }
+.fila-encaix { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e2) var(--e3); margin-top: var(--e2); padding: var(--e2) 0; }
+.fila-encaix[hidden] { display: none; }
+.fila-encaix .fila-estil-text { flex: 1 1 8rem; }
+.fila-encaix .detall { flex: 1 1 100%; margin: 0; }
+.fila-estil:active { background: var(--omplir-fort); }
+.mostra-estil {
+  flex: none; position: relative; width: 40px; height: 40px; border-radius: var(--radi); overflow: hidden;
+  background: linear-gradient(160deg, #3a3a3c, #1c1c1e);
+}
+.fila-estil-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; font-size: var(--t-petit); color: var(--text-2); }
+.fila-estil-text strong { font-size: var(--t-ui); font-weight: 500; color: var(--text); }
+.xebro { flex: none; width: 14px; height: 14px; color: var(--text-3); }
+
+.barra.editant-estil > :not(.panell-estil):not(.cap-estacions) { display: none; }
+.panell-estil { display: flex; flex-direction: column; gap: var(--e5); }
+.panell-estil .tornar { margin: 0; align-self: flex-start; }
+.titol-panell { margin: 0; font-size: var(--t-titol); line-height: 1.2; font-weight: 700; }
+.panell-estil > .detall { margin-top: calc(-1 * var(--e4)); }
+
+.estils { display: grid; grid-template-columns: 1fr 1fr; gap: var(--e3); }
+.estil {
+  display: flex; flex-direction: column; gap: var(--e1); padding: 0; border: 0; background: none;
+  text-align: left; cursor: pointer;
+}
+.estil-mostra {
+  display: block; position: relative; aspect-ratio: 16 / 10; border-radius: var(--radi-mitja);
+  background: linear-gradient(160deg, #48484a, #1c1c1e); overflow: hidden;
+  box-shadow: 0 0 0 1px var(--linia); transition: box-shadow 150ms ease-out, transform 100ms ease-out;
+}
+.estil-nom { font-size: var(--t-petit); font-weight: 500; color: var(--text-2); }
+.estil:hover .estil-mostra { box-shadow: 0 0 0 1px var(--linia), 0 4px 12px rgba(0, 0, 0, 0.15); }
+.estil:active .estil-mostra { transform: scale(0.97); }
+.estil[aria-checked="true"] .estil-mostra { box-shadow: 0 0 0 2px var(--fons), 0 0 0 4px var(--accent); }
+.estil[aria-checked="true"] .estil-nom { color: var(--accent-text); }
+
+.camp { display: flex; flex-direction: column; gap: var(--e2); }
+.etiqueta { font-size: var(--t-petit); font-weight: 600; color: var(--text-2); }
+.fila-camps { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--e2) var(--e3); }
+.panell-estil .interruptor { white-space: normal; text-align: left; }
+.panell-estil .interruptor .pista { flex: none; }
+.panell-estil #e-font { width: 100%; }
+.panell-estil .puja-font { margin: calc(-1 * var(--e1)) 0 0; align-self: flex-start; font-size: var(--t-petit); }
+.panell-estil select {
+  height: 28px; padding: 0 var(--e7) 0 var(--e3); border: 0; border-radius: var(--radi);
+  font: inherit; font-size: var(--t-ui); color: var(--text); cursor: pointer;
+  background: var(--superficie) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='m3 4.5 3-3 3 3M3 7.5l3 3 3-3' fill='none' stroke='%2386868b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 8px center / 10px;
+  box-shadow: 0 0 0 1px var(--linia), 0 1px 1px rgba(0, 0, 0, 0.04);
+  -webkit-appearance: none; appearance: none;
+}
+.panell-estil select:hover { box-shadow: 0 0 0 1px var(--omplir-fort), 0 1px 1px rgba(0, 0, 0, 0.04); }
+.panell-estil input[type="range"] { width: 100%; margin: 0; accent-color: var(--accent); cursor: pointer; }
+.text-titol, .camp-text {
+  width: 100%; min-height: 64px; padding: var(--e2) var(--e3); border: 0; border-radius: var(--radi); resize: vertical;
+  font: inherit; font-size: var(--t-ui); line-height: 1.4; color: var(--text); background: var(--omplir);
+  -webkit-user-select: text; user-select: text;
+}
+.text-titol::placeholder, .camp-text::placeholder { color: var(--text-3); }
+.camp-titol { display: flex; align-items: center; gap: var(--e3); margin-top: var(--e2); }
+.camp-titol input[type="range"] { flex: 1; min-width: 0; accent-color: var(--accent); }
+.camp-titol .valor { min-width: 3em; text-align: right; font-size: var(--t-petit); color: var(--text-2); font-variant-numeric: tabular-nums; }
+.seccio[data-seccio="titol"] .fila-estil { margin-top: var(--e3); }
+.sub-camps { display: flex; flex-direction: column; gap: var(--e2); padding-left: var(--e3); border-left: 2px solid var(--omplir); }
+.sub-camps[hidden] { display: none; }
+.sub-camps .detall { margin: 0; }
+.extrems { display: flex; justify-content: space-between; margin-top: calc(-1 * var(--e1)); font-size: var(--t-peu); color: var(--text-2); }
+.colors { display: flex; gap: var(--e4); }
+.color { display: flex; flex-direction: column; align-items: center; gap: var(--e1); font-size: var(--t-petit); color: var(--text-2); cursor: pointer; }
+.color input {
+  width: 36px; height: 36px; padding: 0; border: 0; border-radius: 50%; cursor: pointer; background: none;
+  box-shadow: 0 0 0 1px var(--linia);
+}
+.color input::-webkit-color-swatch-wrapper { padding: 0; }
+.color input::-webkit-color-swatch { border: 0; border-radius: 50%; }
+.color.apagat { opacity: 0.4; }
+.panell-estil > .enllac { margin: 0; align-self: flex-start; }
+
+/* --- Exporta: l'esborrany, el vídeo final, els altres editors i els vídeos fets ------------------ */
+.full.exporta { width: min(520px, calc(100vw - var(--e8))); max-height: calc(100vh - var(--e8)); overflow-y: auto; }
+/* «+ Afegeix» (el tauler): què és, el fitxer i la paraula on surt. */
+.full.afegeix-peca { width: min(560px, calc(100vw - var(--e8))); max-height: calc(100vh - var(--e8)); overflow-y: auto; }
+#afegeix-on { margin-top: var(--e4); }
+.afegeix-fitxer { display: flex; align-items: center; gap: var(--e3); font-size: var(--t-ui); }
+.afegeix-fitxer img { width: 40px; height: 40px; object-fit: contain; border-radius: var(--radi-petit); background: var(--omplir); }
+.afegeix-fitxer span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.afegeix-fitxer .enllac { margin-left: auto; flex: none; font-size: var(--t-peu); }
+#afegeix-on > .detall { margin: var(--e3) 0 var(--e2); }
+.frases-afegeix { max-height: min(50vh, 420px); overflow-y: auto; overscroll-behavior: contain; margin: 0 calc(-1 * var(--e2));
+  padding: 0 var(--e2); }
+.frase-afegeix { display: flex; gap: var(--e3); padding: 5px 0; border-top: 0.5px solid var(--linia); line-height: 1.6; }
+.frase-afegeix:first-child { border-top: 0; }
+.frase-afegeix .temps { flex: none; width: 2.6em; padding-top: 1px; color: var(--accent-text); font-size: var(--t-peu);
+  font-weight: 600; font-variant-numeric: tabular-nums; }
+.frase-afegeix .paraules { min-width: 0; font-size: var(--t-ui); }
+.frase-afegeix button {
+  padding: 1px 2px; margin: 0 -2px; border: 0; border-radius: 4px; background: none; color: var(--text); font: inherit;
+  cursor: pointer;
+}
+.frase-afegeix button:hover, .frase-afegeix button:focus-visible { background: var(--accent); color: #fff; outline: none; }
+.cap-full { display: flex; align-items: center; gap: var(--e3); }
+.cap-full h2 { font-size: var(--t-titol); }
+.cap-full .detall { flex: 1; margin: 0; font-variant-numeric: tabular-nums; }
+.opcions-export { display: grid; grid-template-columns: 1fr 1fr; gap: var(--e3); margin-top: var(--e5); }
+.opcio-export {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: var(--e4);
+  border: 0; border-radius: var(--radi-mitja); background: var(--omplir); color: var(--text);
+  font: inherit; text-align: left; transition: transform 100ms ease-out, background-color 120ms;
+}
+button.opcio-export { cursor: pointer; }
+button.opcio-export:hover { background: var(--omplir-fort); }
+button.opcio-export:active { transform: scale(0.98); }
+.opcio-export.principal { background: var(--accent-suau); }
+.opcio-export svg {
+  width: 26px; height: 26px; margin-bottom: var(--e2); fill: none; stroke: var(--accent);
+  stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+}
+.opcio-export strong { font-size: var(--t-cos); font-weight: 600; }
+.opcio-export > span { font-size: var(--t-petit); color: var(--text-2); }
+.opcio-export .segmentat { display: flex; width: 100%; margin-top: var(--e3); background: var(--superficie); }
+.opcio-export .segmentat label {
+  flex: 1; height: 26px; line-height: 26px; border-radius: var(--radi-petit); text-align: center; cursor: pointer;
+  font-size: var(--t-ui); font-weight: 500; color: var(--text-2);
+}
+.opcio-export .segmentat input { position: absolute; opacity: 0; pointer-events: none; }
+.opcio-export .segmentat label:has(input:checked) { background: var(--accent); color: #fff; }
+.opcio-export .segmentat label:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+.opcio-export .boto { width: 100%; margin-top: var(--e2); }
+.altres-editors { margin-top: var(--e4); padding-top: var(--e3); border-top: 1px solid var(--linia); }
+.altres-editors summary {
+  display: flex; align-items: center; justify-content: space-between; list-style: none; cursor: pointer;
+  font-size: var(--t-ui); font-weight: 600; color: var(--text);
+}
+.altres-editors summary::-webkit-details-marker { display: none; }
+.altres-editors .xebro-grup { width: 14px; height: 14px; fill: none; stroke: var(--text-2); stroke-width: 1.8; transform: rotate(-90deg); transition: transform 160ms var(--molla); }
+.altres-editors[open] .xebro-grup { transform: none; }
+.altres-editors > .boto { display: block; margin-top: var(--e3); }
+.opcio-check { display: flex; align-items: center; gap: var(--e2); margin: var(--e2) 0 0; font-size: var(--t-petit); color: var(--text-2); cursor: pointer; }
+.versions { margin-top: var(--e4); padding-top: var(--e3); border-top: 1px solid var(--linia); }
+.versions[hidden] { display: none; }
+.versions h3 { margin: 0 0 var(--e2); font-size: var(--t-ui); font-weight: 600; }
+#versions { max-height: 200px; overflow-y: auto; }
+
+.feina { display: flex; align-items: center; gap: var(--e2); font-size: var(--t-ui); color: var(--text-2); font-variant-numeric: tabular-nums; }
+.barra-progres { width: 88px; height: 4px; border-radius: 2px; background: var(--omplir); overflow: hidden; }
+.barra-progres span { display: block; height: 100%; width: 0; background: var(--accent); border-radius: 2px; transition: width 300ms ease-out; }
+
+/* --- Reproductor ------------------------------------------------------------ */
+
+.reproductor {
+  height: 100vh; padding: var(--e5) var(--e7) var(--e6); overflow: hidden;
+  display: flex; flex-direction: column; align-items: center; gap: var(--e3);
+  border-left: 1px solid var(--linia);
+}
+/* La pantalla és un contenidor de mida: el vídeo hi cap sencer, sempre en 9:16,
+   tant si l'espai és alt i estret com baix i ample (Safari no encongeix bé un
+   vídeo amb height: 100% dins d'una graella). */
+.pantalla {
+  position: relative; width: 100%; flex: 1; min-height: 0;
+  container-type: size;
+  display: grid; place-items: center;
+  margin-top: var(--e1);
+  isolation: isolate;  /* els vídeos de sota (z-index -1) no surten de la pantalla */
+}
+.pantalla video {
+  grid-area: 1 / 1;
+  width: min(100cqw, calc(100cqh * 9 / 16));
+  height: auto; aspect-ratio: 9 / 16;
+  border-radius: var(--radi-gran); background: #000; box-shadow: var(--ombra);
+  object-fit: cover; overflow: hidden;
+}
+/* Els vídeos que no es veuen queden just a sota del que es veu, tapats (també pel bloc de color, que els queda a
+   sobre), en lloc d'amagats: el Safari no deixa preparar un vídeo amagat (saltar al punt, sonar en silenci), i la
+   còpia sense salts no arribava mai a prendre el relleu. */
+.pantalla video { z-index: 0; }
+.pantalla video.amagat { z-index: -1; pointer-events: none; }
+/* Zoom (instrucció de veu acceptada): ampliem el vídeo i en retallem les vores
+   perquè la caixa arrodonida es quedi igual. */
+.pantalla video.zoom {
+  transform: scale(var(--zoom, 1.15));
+  clip-path: inset(calc((1 - 1 / var(--zoom, 1.15)) * 50%) round calc(var(--radi-gran) / var(--zoom, 1.15)));
+  box-shadow: none;
+}
+/* Pantalla partida: mentre surt el b-roll, la franja del mig de la persona baixa a la meitat
+   de sota (com fa l'export, motor/targetes.py). */
+.pantalla video.partida {
+  transform: translateY(25%);
+  clip-path: inset(25% 0 25% 0 round 0 0 var(--radi-gran) var(--radi-gran));
+  box-shadow: none;
+}
+.pantalla video.partida.zoom {
+  transform: translateY(25%) scale(var(--zoom, 1.15));
+  clip-path: inset(calc(50% - 25% / var(--zoom, 1.15)) calc(50% - 50% / var(--zoom, 1.15))
+                   round 0 0 calc(var(--radi-gran) / var(--zoom, 1.15)) calc(var(--radi-gran) / var(--zoom, 1.15)));
+}
+/* Bloc de color: el fons que es veu quan el vídeo s'encongeix (app.js, pintaBloc). Va sota el vídeo. */
+.capa-bloc {
+  grid-area: 1 / 1; width: min(100cqw, calc(100cqh * 9 / 16)); aspect-ratio: 9 / 16;
+  border-radius: var(--radi-gran); box-shadow: var(--ombra);
+}
+.capa-bloc[hidden] { display: none; }
+/* B-roll en directe: treballa a 1080 × 1920 (com l'export) i s'escala a la mida del reproductor. */
+.capa-broll {
+  grid-area: 1 / 1; position: relative; z-index: 1; pointer-events: none;
+  width: min(100cqw, calc(100cqh * 9 / 16)); aspect-ratio: 9 / 16;
+  overflow: hidden; border-radius: var(--radi-gran);
+}
+.capa-broll.partida::before { content: ""; position: absolute; inset: 0 0 50% 0; background: #000; }
+#br-host { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+.targeta-broll {
+  position: absolute; box-sizing: border-box; overflow: hidden; border-style: solid;
+  background: #000; will-change: transform, opacity;
+}
+.targeta-broll > video, .targeta-broll > i { display: block; width: 100%; height: 100%; object-fit: cover; }
+/* A les miniatures, en lloc del vídeo, un degradat. */
+.targeta-broll > i { background: linear-gradient(150deg, #8e8e93, #3a3a3c); }
+.targeta-broll:nth-child(3n + 2) > i { background: linear-gradient(150deg, #aeaeb2, #48484a); }
+.targeta-broll:nth-child(3n + 3) > i { background: linear-gradient(150deg, #d1d1d6, #636366); }
+.mini-broll {
+  position: absolute; left: 50%; top: 50%; width: 1080px; height: 1920px; transform-origin: 0 0;
+  background: linear-gradient(180deg, #2c2c2e, #1c1c1e);
+}
+/* La persona, a les miniatures: un cap i unes espatlles. */
+.mini-broll::before {
+  content: ""; position: absolute; left: 340px; top: 620px; width: 400px; height: 1300px;
+  border-radius: 200px 200px 0 0; background: #48484a;
+  -webkit-mask: radial-gradient(circle 150px at 200px 160px, #000 99%, transparent 100%),
+                linear-gradient(#000, #000) 0 360px / 100% 100% no-repeat;
+          mask: radial-gradient(circle 150px at 200px 160px, #000 99%, transparent 100%),
+                linear-gradient(#000, #000) 0 360px / 100% 100% no-repeat;
+}
+.mini-broll.partida::after {
+  content: ""; position: absolute; inset: 0 0 50% 0; background: #000;
+}
+.mini-broll.partida::before { top: 1100px; }
+.estil-mostra .mini-broll .targeta-broll, .mostra-estil .mini-broll .targeta-broll { z-index: 1; }
+
+/* Subtítols en directe: mateixa caixa que el vídeo, mides relatives a la seva amplada. */
+.capa-subtitols {
+  grid-area: 1 / 1; position: relative; z-index: 1; pointer-events: none;
+  width: min(100cqw, calc(100cqh * 9 / 16)); aspect-ratio: 9 / 16;
+  container-type: inline-size; overflow: hidden; border-radius: var(--radi-gran);
+}
+.capa-subtitols[hidden] { display: none; }
+.capa-stickers {
+  grid-area: 1 / 1; position: relative; z-index: 1; pointer-events: none;
+  width: min(100cqw, calc(100cqh * 9 / 16)); aspect-ratio: 9 / 16;
+  overflow: hidden; border-radius: var(--radi-gran);
+}
+.sticker-viu {
+  position: absolute; height: auto; transform: translate(-50%, -50%) rotate(var(--rot, 8deg));
+  filter: var(--ombra-sticker, drop-shadow(0 6px 10px rgba(0, 0, 0, 0.35)));
+  animation: sticker-entra 380ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes sticker-entra {
+  from { transform: translate(-50%, -50%) rotate(calc(var(--rot, 8deg) - 18deg)) scale(0); opacity: 0; }
+}
+/* Al tauler, el sticker de la seva targeta es mou arrossegant-lo. */
+.sticker-viu.es-mou { pointer-events: auto; cursor: grab; touch-action: none; user-select: none; -webkit-user-drag: none; }
+.sticker-viu.movent { cursor: grabbing; animation: none; filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.45)); }
+#ts-host, #tt-host, .estil-mostra > .ts-capa, .mostra-estil > .ts-capa, .estil-mostra > .tt-capa,
+.mostra-estil > .tt-capa { transform-origin: 0 0; }
+#tt-host { position: absolute; left: 0; top: 0; }
+
+.gran-play {
+  grid-area: 1 / 1; z-index: 2;
+  width: 64px; height: 64px; border-radius: 50%; border: 0; cursor: pointer;
+  background: rgba(255, 255, 255, 0.72); color: #1d1d1f;
+  backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
+  display: grid; place-items: center; box-shadow: var(--ombra);
+  transition: opacity 200ms ease-out, transform 240ms var(--molla);
+}
+.gran-play svg { width: 30px; height: 30px; fill: currentColor; stroke: none; margin-left: 3px; }
+.gran-play:hover { transform: scale(1.04); }
+.gran-play:active { transform: scale(0.94); }
+body.reproduint .gran-play { opacity: 0; transform: scale(0.85); pointer-events: none; }
+
+/* Línia de temps: la pista s'eixampla en passar-hi per sobre (com als reproductors del sistema) */
+.linia-temps {
+  position: relative; width: 100%; height: 20px; cursor: pointer; touch-action: none;
+  --gruix: 4px;
+}
+.linia-temps:hover, .linia-temps:active { --gruix: 6px; }
+.linia-temps::before {
+  content: ""; position: absolute; left: 0; right: 0; top: calc(50% - var(--gruix) / 2); height: var(--gruix);
+  border-radius: 3px; background: var(--omplir-fort); transition: height 150ms var(--molla), top 150ms var(--molla);
+}
+.trossos { position: absolute; left: 0; right: 0; top: calc(50% - 4px); height: 8px; }
+.trossos i { position: absolute; top: 0; width: 1px; height: 8px; background: var(--text-3); opacity: 0.7; }
+.ple {
+  position: absolute; left: 0; top: calc(50% - var(--gruix) / 2); height: var(--gruix);
+  border-radius: 3px; background: var(--accent); width: 0;
+  transition: height 150ms var(--molla), top 150ms var(--molla);
+}
+.capcal {
+  position: absolute; top: 50%; width: 14px; height: 14px; margin: -7px 0 0 -7px; left: 0;
+  border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 0 0 0.5px rgba(0, 0, 0, 0.08);
+  transition: transform 150ms var(--molla);
+}
+.linia-temps:hover .capcal { transform: scale(1.1); }
+.linia-temps:active .capcal { transform: scale(1.25); }
+
+.controls { width: 100%; display: flex; align-items: center; justify-content: space-between; }
+.temps { min-width: 44px; font-size: var(--t-petit); color: var(--text-2); font-variant-numeric: tabular-nums; }
+#temps-total { text-align: right; }
+.controls .icona { color: var(--text); }
+.play { width: 40px; height: 40px; border-radius: 50%; }
+.play svg { width: 24px; height: 24px; }
+.play .si-pausa { fill: currentColor; stroke: none; }
+.play .si-play { stroke-width: 2.6; display: none; }
+body.reproduint .play .si-pausa { display: none; }
+body.reproduint .play .si-play { display: block; }
+
+/* Notes per a Claude, sota el vídeo. El número i el color de cada nota són els mateixos a la llista i a la
+   línia de temps: gris per enviar, blau a Claude, verd feta, taronja quan Claude et pregunta alguna cosa. */
+.notes {
+  width: 100%; flex: 0 1 auto; min-height: 0; max-height: 52%;
+  display: flex; flex-direction: column; gap: var(--e2);
+  padding-top: var(--e3); border-top: 1px solid var(--linia);
+}
+.cap-notes { display: flex; align-items: baseline; justify-content: space-between; gap: var(--e2); }
+.cap-notes h2 { margin: 0; font-size: var(--t-petit); font-weight: 600; color: var(--text-2); }
+.connexio { display: inline-flex; align-items: center; gap: 6px; font-size: var(--t-peu); color: var(--text-2); white-space: nowrap; }
+.punt-connexio { width: 7px; height: 7px; border-radius: 50%; background: var(--text-3); transition: background-color 200ms; }
+.connexio.connectat .punt-connexio { background: var(--verd); }
+.connexio.treballa .punt-connexio { background: var(--accent); }
+.avis-connexio { padding: var(--e2) var(--e3); border-radius: var(--radi); background: var(--proposta-suau); font-size: var(--t-petit); line-height: 1.45; }
+.avis-connexio p { margin: 0 0 var(--e2); }
+.avis-connexio q { font-weight: 600; }
+.nova-nota {
+  flex: none; display: flex; flex-direction: column; gap: 6px; padding: 6px var(--e2);
+  border-radius: var(--radi); background: var(--superficie); box-shadow: inset 0 0 0 1px var(--linia);
+}
+.fila-nova-nota { display: flex; align-items: flex-start; gap: var(--e2); }
+/* El peu (↩ desa i el botó), només mentre s'hi escriu: quan no, la llista de sota té més lloc. */
+.nova-nota .peu-nota { display: none; }
+.nova-nota:focus-within .peu-nota, .nova-nota:has(#text-nota:not(:placeholder-shown)) .peu-nota { display: flex; }
+.nova-nota:focus-within { box-shadow: inset 0 0 0 1px var(--accent), 0 0 0 3px var(--focus); }
+.temps-nota {
+  flex: none; height: 22px; margin-top: 1px; padding: 0 6px; border: 0; border-radius: 5px;
+  background: var(--accent-suau); color: var(--accent-text); font-size: var(--t-peu); font-weight: 600;
+  font-variant-numeric: tabular-nums; cursor: pointer;
+}
+.temps-nota.tot { background: var(--omplir); color: var(--text-2); }
+#text-nota {
+  flex: 1; min-width: 0; min-height: 42px; max-height: 128px; padding: 1px 2px; border: 0; background: none; resize: none;
+  font: inherit; font-size: var(--t-cos); line-height: 20px; color: var(--text); outline: none;
+  -webkit-user-select: text; user-select: text;
+}
+#text-nota::placeholder, #text-nota-revisa::placeholder { color: var(--text-3); }
+.llista-notes { margin: 0 calc(-1 * var(--e1)); padding: 0 var(--e1); min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 2px; }
+.noves-notes { color: var(--accent-text); font-weight: 600; }
+.grup-notes {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--e2); flex: none;
+  margin: 6px 0 0; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-2);
+}
+.grup-notes:first-child { margin-top: 0; }
+.grup-necessita { color: var(--auto); }
+.grup-notes .boto { text-transform: none; letter-spacing: 0; height: 24px; font-size: var(--t-petit); }
+.cua-notes { flex: none; margin: 2px 0 0; }
+/* Una nota, una línia: es toca per obrir-la. */
+.linia-nota {
+  flex: none; display: flex; align-items: center; gap: 7px; width: 100%; min-height: 27px; padding: 0 6px;
+  border: 0; border-radius: var(--radi-petit); background: none; color: var(--text); text-align: left; cursor: pointer;
+  font-size: var(--t-ui); transition: background-color 120ms ease-out;
+}
+.linia-nota:hover { background: var(--omplir); }
+.linia-nota:active { background: var(--omplir-fort); }
+.linia-temps-nota { flex: none; color: var(--accent-text); font-size: var(--t-peu); font-weight: 600; font-variant-numeric: tabular-nums; }
+.linia-text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.estat-enviada.linia-nota .linia-text, .estat-treballant.linia-nota .linia-text { color: var(--text-2); }
+.punt-nou { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+.roda-nota {
+  flex: none; width: 11px; height: 11px; border-radius: 50%;
+  border: 2px solid var(--accent-suau); border-top-color: var(--accent); animation: gira-nota 0.9s linear infinite;
+}
+@keyframes gira-nota { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .roda-nota { animation: none; border-color: var(--accent); } }
+.fila-fetes {
+  flex: none; display: flex; align-items: center; gap: 7px; width: 100%; min-height: 28px; margin-top: 6px; padding: 0 8px;
+  border: 0; border-radius: var(--radi-petit); background: var(--omplir); color: var(--text-2); cursor: pointer; font-size: var(--t-ui);
+}
+.fila-fetes:hover { background: var(--omplir-fort); }
+.fila-fetes .ok { color: var(--verd); font-weight: 700; }
+.fila-fetes .xebro { width: 12px; height: 12px; margin-left: auto; transition: transform 150ms var(--molla); }
+.fila-fetes[aria-expanded="true"] .xebro { transform: rotate(90deg); }
+.nota-plega { flex: none; display: inline-flex; padding: 0; border: 0; background: none; cursor: pointer; border-radius: 8px; }
+.nota-al-xat { margin: var(--e2) 0 0; padding: 6px 8px; border-radius: var(--radi-petit); background: var(--auto-suau); font-size: var(--t-petit); }
+.nota { flex: none; margin: 2px 0; padding: var(--e2); border-radius: var(--radi); background: var(--superficie); box-shadow: 0 0 0 0.5px var(--linia), 0 1px 3px rgba(0, 0, 0, 0.06); }
+.nota.llum { animation: llum-nota 1.2s var(--molla); }
+@keyframes llum-nota { 0% { box-shadow: 0 0 0 2px var(--accent); } 100% { box-shadow: 0 0 0 0.5px var(--linia); } }
+.nota-cap { display: flex; align-items: center; gap: 6px; min-width: 0; font-size: var(--t-peu); color: var(--text-2); cursor: pointer; }
+.num-nota, .marca-nota {
+  flex: none; display: inline-flex; align-items: center; justify-content: center; height: 16px; min-width: 16px; padding: 0 4px;
+  border: 0; border-radius: 8px 8px 8px 2px; background: var(--num-gris); color: #fff; font-size: 10px; font-weight: 700; line-height: 1;
+}
+.estat-enviada .num-nota, .estat-treballant .num-nota, .marca-nota.estat-enviada, .marca-nota.estat-treballant { background: var(--accent); }
+.estat-feta .num-nota, .marca-nota.estat-feta { background: var(--num-verd); }
+.estat-pregunta .num-nota, .marca-nota.estat-pregunta { background: var(--num-taronja); }
+.nota-temps {
+  flex: none; padding: 0; border: 0; background: none; color: var(--accent-text); font: inherit; font-weight: 600;
+  font-variant-numeric: tabular-nums; cursor: pointer;
+}
+.nota-temps:hover { text-decoration: underline; }
+.nota-cita { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nota-text, .nota-claude { margin: var(--e1) 0 0; font-size: var(--t-ui); white-space: pre-wrap; overflow-wrap: anywhere; -webkit-user-select: text; user-select: text; }
+.nota-claude { margin-left: 2px; padding-left: var(--e2); border-left: 2px solid var(--linia); }
+.nota-claude b { display: block; font-size: var(--t-peu); font-weight: 600; color: var(--text-2); }
+.nota-peu { display: flex; align-items: center; gap: var(--e2); margin-top: 6px; }
+.nota-peu .enllac { margin: 0; font-size: var(--t-peu); }
+.xip-nota {
+  display: inline-flex; align-items: center; height: 20px; padding: 0 7px; border-radius: 10px;
+  background: var(--omplir); font-size: 11px; font-weight: 600; color: var(--text-2);
+}
+.estat-enviada .xip-nota, .estat-treballant .xip-nota { background: var(--accent-suau); color: var(--accent-text); }
+.estat-feta .xip-nota { background: var(--verd-suau); color: var(--verd); }
+.estat-pregunta .xip-nota { background: var(--auto-suau); color: var(--auto); }
+.respon-nota { display: flex; align-items: flex-end; gap: 6px; margin-top: var(--e2); }
+.respon-nota textarea {
+  flex: 1; min-width: 0; height: 28px; max-height: 90px; padding: 4px 8px; border: 0; border-radius: var(--radi-petit);
+  background: var(--fons); box-shadow: inset 0 0 0 1px var(--linia); resize: none;
+  font: inherit; font-size: var(--t-ui); line-height: 18px; color: var(--text); -webkit-user-select: text; user-select: text;
+}
+.respon-nota textarea:focus { outline: none; box-shadow: inset 0 0 0 1px var(--accent), 0 0 0 3px var(--focus); }
+.boto.petit { height: 28px; padding: 0 var(--e3); font-size: var(--t-petit); }
+.boto.suau { background: var(--accent-suau); color: var(--accent-text); font-weight: 600; }
+.boto.suau:hover { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+.boto.ample { flex: none; width: 100%; height: 32px; }
+/* Carregant: una rodeta damunt del vídeo quan s'encalla (com als reproductors de sempre), i un rètol quan sona la
+   còpia que salta mentre es prepara la que no. Tots dos, a sobre del vídeo i sense tapar els clics. */
+.carregant {
+  position: absolute; inset: 0; z-index: 4; pointer-events: none;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--e2);
+  animation: apareix 150ms ease-out;
+}
+.roda-carrega {
+  width: 44px; height: 44px; border-radius: 50%;
+  border: 4px solid rgba(255, 255, 255, 0.35); border-top-color: #fff;
+  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.45)); animation: gira-nota 0.9s linear infinite;
+}
+.text-carrega { color: #fff; font-size: var(--t-petit); font-weight: 600; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6); }
+@media (prefers-reduced-motion: reduce) { .roda-carrega { animation: none; } }
+.preparant {
+  position: absolute; left: 50%; z-index: 4; transform: translateX(-50%); pointer-events: none;
+  top: calc((100cqh - min(100cqh, 100cqw * 16 / 9)) / 2 + var(--e3));
+  padding: 5px var(--e3); border-radius: var(--radi); background: rgba(29, 29, 31, 0.78); color: #fff;
+  font-size: var(--t-peu); font-weight: 500; white-space: nowrap;
+  animation: apareix-tard 1.2s ease-out;  /* si el canvi és ràpid, ni es veu */
+}
+@keyframes apareix-tard { 0%, 50% { opacity: 0; } 100% { opacity: 1; } }
+
+/* --- Revisa: l'esborrany gran a l'esquerra, les notes de la versió a la dreta ------------------------------- */
+body.revisant { grid-template-columns: minmax(0, 1fr); }
+body.revisant .barra, body.revisant .text, body.revisant .reproductor, body.revisant .divisor { display: none !important; }
+.revisa { grid-column: 1 / -1; height: 100vh; min-height: 0; display: flex; flex-direction: column; background: var(--fons); }
+.revisa-cap {
+  flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: var(--e2) var(--e3);
+  padding: var(--e3) var(--e6) var(--e3) var(--e5); border-bottom: 1px solid var(--linia);
+}
+.versions-revisa { display: flex; flex-wrap: wrap; gap: 6px; }
+.versions-revisa button {
+  height: 28px; padding: 0 var(--e3); border: 0; border-radius: 14px; background: var(--omplir); color: var(--text-2);
+  font: inherit; font-size: var(--t-petit); font-weight: 500; cursor: pointer; white-space: nowrap;
+}
+.versions-revisa button:hover:not([aria-checked="true"]) { color: var(--text); background: var(--omplir-fort); }
+.versions-revisa button[aria-checked="true"] { background: var(--text); color: var(--fons); }
+.revisa-buit { margin: auto; max-width: 440px; padding: var(--e6); text-align: center; }
+.revisa-buit h2 { margin: 0 0 var(--e2); font-size: var(--t-titol); }
+.revisa-buit p { margin: 0 0 var(--e5); color: var(--text-2); font-size: var(--t-cos); line-height: 1.5; }
+.revisa-cos { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, 420px); }
+.revisa-monitor { min-height: 0; display: flex; flex-direction: column; align-items: center; gap: var(--e3); padding: var(--e5) var(--e6) var(--e6); }
+.revisa-pantalla { position: relative; flex: 1; min-height: 0; width: 100%; container-type: size; display: grid; place-items: center; }
+#video-revisa {
+  width: min(100cqw, calc(100cqh * 9 / 16)); height: auto; aspect-ratio: 9 / 16;
+  border-radius: var(--radi-gran); background: #000; box-shadow: var(--ombra);
+}
+/* La barra fa l'amplada del vídeo (es posa des de la pàgina): els números hi cauen al seu moment. */
+.revisa-barra { flex: none; width: 100%; max-width: 560px; display: flex; flex-direction: column; gap: 2px; }
+#video-revisa { cursor: pointer; }
+.revisa-controls { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: var(--e3); margin-top: var(--e1); }
+#durada-revisa { text-align: right; }
+#rv-play .si-play { display: none; }
+#rv-play.sona .si-pausa { display: none; }
+#rv-play.sona .si-play { display: block; }
+.tc-revisa { font-size: var(--t-cos); font-weight: 600; font-variant-numeric: tabular-nums; }
+.nota-revisa {
+  flex: none; display: flex; flex-direction: column; gap: var(--e2); padding: var(--e3);
+  border-radius: var(--radi); background: var(--superficie); box-shadow: inset 0 0 0 1px var(--linia);
+}
+.nota-revisa:focus-within { box-shadow: inset 0 0 0 1px var(--accent), 0 0 0 3px var(--focus); }
+.cap-nota-revisa, .peu-nota { display: flex; align-items: center; gap: var(--e2); }
+.peu-nota { justify-content: space-between; }
+.peu-nota .detall { margin: 0; }
+#text-nota-revisa {
+  width: 100%; min-height: 66px; max-height: 220px; padding: 0; border: 0; background: none; resize: none;
+  font: inherit; font-size: var(--t-cos); line-height: 1.45; color: var(--text); outline: none;
+  -webkit-user-select: text; user-select: text;
+}
+.revisa-notes {
+  min-height: 0; display: flex; flex-direction: column; gap: var(--e2);
+  padding: var(--e5) var(--e5) var(--e6); border-left: 1px solid var(--linia); background: var(--barra);
+}
+.llista-revisa { min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: var(--e2); margin: 0 calc(-1 * var(--e1)); padding: 2px var(--e1); }
+.buit-revisa { margin: var(--e2) 0 0; }
+.targeta-nota {
+  flex: none; display: grid; grid-template-columns: 54px minmax(0, 1fr); gap: var(--e3); padding: var(--e2);
+  border-radius: var(--radi); background: var(--superficie); box-shadow: 0 0 0 0.5px var(--linia), 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+.targeta-nota.estat-pregunta { box-shadow: inset 3px 0 0 var(--auto), 0 0 0 0.5px var(--linia), 0 1px 3px rgba(0, 0, 0, 0.06); }
+.targeta-nota.estat-feta .cos-targeta > :not(.nota-peu):not(.respon-nota) { opacity: 0.75; }
+.targeta-nota.llum { animation: llum-nota 1.2s var(--molla); }
+.mini-nota { width: 54px; aspect-ratio: 9 / 16; padding: 0; border: 0; border-radius: 6px; overflow: hidden; background: #000; cursor: pointer; }
+.mini-nota img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.cos-targeta { min-width: 0; }
+.meta-targeta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.temps-revisa {
+  padding: 2px 7px; border: 0; border-radius: 6px; background: var(--accent-suau); color: var(--accent-text);
+  font: inherit; font-size: var(--t-peu); font-weight: 600; font-variant-numeric: tabular-nums; cursor: pointer;
+}
+.meta-targeta .punt-nou { margin-left: auto; }
+@media (max-width: 700px) {
+  .revisa { height: auto; min-height: 100vh; }
+  .revisa-cos { grid-template-columns: 1fr; }
+  .revisa-pantalla { height: 70vh; flex: none; }
+  .revisa-notes { border-left: 0; border-top: 1px solid var(--linia); }
+}
+
+/* Els números de les notes, sobre la línia de temps: la punta de la bombolla assenyala el moment. */
+.marques-notes { position: relative; width: 100%; height: 16px; margin-bottom: calc(-1 * var(--e2)); }
+.marca-nota { position: absolute; top: 0; cursor: pointer; transition: transform 120ms var(--molla); }
+/* El dibuix és petit, però la zona que es pot tocar fa uns 26 px (cap avall poc: a sota hi ha la línia de temps). */
+.marca-nota::before { content: ""; position: absolute; inset: -8px -5px -2px; }
+.marca-nota:hover { transform: scale(1.15); transform-origin: bottom left; }
+
+
+/* --- Full modal i avisos ------------------------------------------------------ */
+
+.velo {
+  position: fixed; inset: 0; z-index: 20; background: rgba(0, 0, 0, 0.28);
+  animation: apareix 200ms ease-out;
+}
+.full {
+  position: fixed; z-index: 21; left: 50%; top: 50%; width: min(440px, calc(100vw - var(--e8)));
+  transform: translate(-50%, -50%);
+  padding: var(--e6); border-radius: var(--radi-mitja);
+  background: var(--superficie); box-shadow: var(--ombra-gran);
+  animation: puja 320ms var(--molla);
+}
+.full h2 { margin: 0; font-size: var(--t-cos); font-weight: 600; }
+.opcio {
+  display: flex; align-items: center; gap: var(--e3); margin-top: var(--e3);
+  padding: var(--e3) var(--e4); border-radius: var(--radi); cursor: pointer;
+  box-shadow: inset 0 0 0 1px var(--linia); font-size: var(--t-ui);
+  transition: background-color 120ms, box-shadow 120ms;
+}
+.opcio:hover { background: var(--omplir); }
+.opcio:has(input:checked) { box-shadow: inset 0 0 0 2px var(--accent); background: var(--accent-suau); }
+.opcio input { accent-color: var(--accent); margin: 0; }
+.avis {
+  margin: var(--e4) 0 0; font-size: var(--t-petit); line-height: 1.5; color: var(--text);
+  background: var(--proposta-suau); padding: var(--e3); border-radius: var(--radi);
+}
+.botons { display: flex; justify-content: flex-end; gap: var(--e2); margin-top: var(--e6); }
+
+.avis-flotant {
+  position: fixed; left: 50%; bottom: var(--e7); z-index: 30;
+  transform: translate(-50%, var(--e5)); opacity: 0; pointer-events: none;
+  max-width: min(560px, calc(100vw - var(--e8)));
+  padding: var(--e2) var(--e4); border-radius: var(--radi-mitja); font-size: var(--t-ui);
+  background: rgba(29, 29, 31, 0.86); color: #fff;
+  backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: var(--ombra);
+  transition: opacity 220ms ease-out, transform 320ms var(--molla);
+}
+.avis-flotant.visible { opacity: 1; transform: translate(-50%, 0); }
+
+@keyframes apareix { from { opacity: 0; } }
+@keyframes puja { from { opacity: 0; transform: translate(-50%, -48%) scale(0.98); } }
+
+/* --- Adaptacions ------------------------------------------------------------ */
+
+@media (max-width: 1200px) {
+  :root { --amplada-barra: 248px; --amplada-reproductor: 332px; }
+  .marca-temps { display: none; }
+  .eines, .ajuda, .transcripcio { padding-left: var(--e6); padding-right: var(--e6); }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 1ms !important; transition-duration: 1ms !important; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .barra, .eines, .cap-estacions { background: var(--fons); backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .gran-play, .avis-flotant { backdrop-filter: none; -webkit-backdrop-filter: none; }
+}
+@media (prefers-contrast: more) and (prefers-color-scheme: light) {
+  :root { --linia: rgba(0, 0, 0, 0.35); --text-2: #3a3a3c; --omplir: rgba(120, 120, 128, 0.24); }
+}
+@media (prefers-contrast: more) and (prefers-color-scheme: dark) {
+  :root { --linia: rgba(255, 255, 255, 0.4); --text-2: #d1d1d6; --omplir: rgba(120, 120, 128, 0.4); }
+}
+@media (prefers-contrast: more) {
+  .barra, .eines, .cap-estacions { background: var(--fons); backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .p.fora { opacity: 1; }
+}
+
+/* --- So ------------------------------------------------------------------------ */
+
+/* Abans i després: dos botons per escoltar deu segons (sense el reproductor del navegador). */
+.abans-despres { display: grid; grid-template-columns: 1fr 1fr; gap: var(--e2); margin-top: var(--e3); }
+.abans-despres[hidden], .abans-despres [hidden] { display: none; }
+.mostra-so { display: inline-flex; align-items: center; justify-content: center; gap: var(--e2); }
+.icona-so { width: 0; height: 0; border-style: solid; border-width: 5px 0 5px 8px; border-color: transparent transparent transparent currentColor; }
+.mostra-so[aria-pressed="true"] { background: var(--accent); color: #fff; }
+.mostra-so[aria-pressed="true"] .icona-so { width: 8px; height: 10px; border: 0; border-left: 3px solid currentColor; border-right: 3px solid currentColor; }
+#panell-so .interruptor { white-space: normal; text-align: left; }
+#panell-so .camp { margin-top: var(--e3); }
+#panell-so input[type="range"] { width: 100%; margin: 0; accent-color: var(--accent); cursor: pointer; }
+#panell-so code { font-size: 0.92em; word-break: break-all; }
+#llista-efectes { display: flex; flex-direction: column; margin: var(--e3) 0 var(--e2); }
+.efecte { display: flex; align-items: center; gap: var(--e2); padding: var(--e1) 0; border-top: 1px solid var(--linia); }
+.efecte:first-child { border-top: 0; }
+.efecte .nom-efecte { flex: 1; min-width: 0; font-size: var(--t-petit); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.efecte.apagat .nom-efecte { color: var(--text-3); text-decoration: line-through; }
+.efecte .moment { font-size: var(--t-petit); color: var(--accent-text); background: none; border: 0; padding: 0; cursor: pointer;
+  font-variant-numeric: tabular-nums; }
+.efecte .icona { width: 26px; height: 26px; }
+
+/* --- La teva marca ------------------------------------------------------------ */
+
+.mostra-marca { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 2px; padding: 5px;
+  background: var(--omplir); }
+.mostra-marca i { border-radius: 4px; background: var(--omplir-fort); }
+.colors-marca { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--e3); }
+#m-energia button[aria-pressed="true"] { background: var(--superficie); color: var(--text); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); }
+input.camp-text { min-height: 0; }
+#panell-marca select, #e-clau-font, #t-clau-font { width: 100%; }
+/* El resum de la marca, a la fila: com a molt dues línies. */
+#nom-marca { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* --- Vesteix ----------------------------------------------------------------- */
+
+/* Tres columnes: la galeria de peces (a l'esquerra), el vídeo gran (al mig) i la peça que has tocat amb les notes
+   (a la dreta). El text no hi és: ja s'ha fet a Edita. Cada mena de peça té el seu color, el mateix a tot arreu. */
+:root {
+  --amplada-galeria: 300px; --amplada-dreta: 340px;
+  --c-grafic: #7d3cc8; --c-broll: #1f7a35; --c-zoom: #0071e3; --c-so: #c93400;
+  --lila-text: #6b2fb3; --lila-suau: rgba(125, 60, 200, 0.12);
+}
+@media (prefers-color-scheme: dark) {
+  :root { --lila-text: #c9a0ff; --lila-suau: rgba(175, 120, 255, 0.2); }
+}
+.vesteix-barra { display: none; }
+body.vestint .vesteix-barra { display: block; }
+body.vestint .inici { display: none; }
+body.vestint { grid-template-columns: var(--amplada-galeria) minmax(0, 1fr) var(--amplada-dreta); }
+body.vestint .text, body.vestint .divisor { display: none !important; }
+/* La galeria i el vídeo hi són sempre (encara que a Edita s'haguessin amagat). */
+body.vestint.sense-barra .barra { display: block; }
+body.vestint.sense-reproductor .reproductor { display: flex; }
+body.vestint .reproductor { grid-column: 2; border-left: 0; padding-left: var(--e8); padding-right: var(--e8); }
+.vesteix-dreta {
+  grid-column: 3; height: 100vh; min-width: 0; display: flex; flex-direction: column;
+  background: var(--barra); border-left: 1px solid var(--linia);
+  backdrop-filter: blur(30px) saturate(180%); -webkit-backdrop-filter: blur(30px) saturate(180%);
+  -webkit-user-select: none; user-select: none;
+}
+.dreta-cap { flex: none; display: flex; align-items: center; gap: var(--e2); padding: var(--e3) var(--e4); }
+.dreta-cap .espai { flex: 1; }
+.dreta-cap .feina .barra-progres { width: 56px; }
+.segmentat.pestanyes-dreta { flex: none; width: auto; margin: 0 var(--e5) var(--e2); }  /* sense el 100 % d'«ample»: amb els marges, sortia */
+.pestanyes-dreta button { position: relative; }
+.pestanyes-dreta .compte { margin-left: 2px; }
+.pestanyes-dreta .punt-nou { position: absolute; top: 5px; right: 8px; }
+.peca { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: var(--e2) var(--e5) var(--e5); }
+/* Les notes per a Claude (les porta aquí la pàgina) tenen la seva pestanya, amb tota l'alçada: a dalt la caixa,
+   a sota la llista, que és l'única que baixa. Més grans que sota el vídeo d'Edita, on hi ha poc lloc. */
+.vesteix-dreta[data-pestanya="notes"] .peca, .vesteix-dreta[data-pestanya="peces"] .notes { display: none; }
+body.vestint .vesteix-dreta .notes {
+  flex: 1 1 auto; max-height: none; min-height: 0; padding: var(--e2) var(--e5) var(--e5); border-top: 0; gap: var(--e3);
+}
+.vesteix-dreta .notes .cap-notes h2 { font-size: var(--t-ui); }
+.vesteix-dreta .nova-nota { padding: var(--e2) var(--e3); }
+.vesteix-dreta .nova-nota .peu-nota { display: flex; }
+.vesteix-dreta #text-nota { min-height: 62px; max-height: 200px; line-height: 1.45; }
+/* El Safari no encongeix un botó més que el seu text (un enllaç llarg l'eixamplava i la nota sortia de la pàgina):
+   cap fill no pot ser més ample que la columna, i les paraules llargues es parteixen. */
+.vesteix-dreta, .vesteix-dreta .notes { min-width: 0; overflow-x: clip; }  /* clip: sense fer-ne una altra barra de baixar */
+.vesteix-dreta .llista-notes { flex: 1 1 auto; gap: var(--e1); overflow-x: clip; }
+.vesteix-dreta .llista-notes > * { min-width: 0; max-width: 100%; }
+.vesteix-dreta .linia-nota { align-items: flex-start; gap: var(--e2); min-height: 44px; padding: var(--e2); font-size: var(--t-cos); line-height: 1.35; }
+.vesteix-dreta .linia-nota .linia-text {
+  white-space: normal; overflow-wrap: anywhere; word-break: break-word;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+}
+.vesteix-dreta .linia-temps-nota { font-size: var(--t-petit); line-height: 20px; }
+.vesteix-dreta .num-nota { height: 20px; min-width: 20px; margin-top: 1px; font-size: 12px; border-radius: 10px 10px 10px 3px; }
+.vesteix-dreta .linia-nota .punt-nou, .vesteix-dreta .linia-nota .roda-nota { margin-top: 6px; }
+.vesteix-dreta .nota { padding: var(--e3); }
+.vesteix-dreta .nota-text, .vesteix-dreta .nota-claude, .vesteix-dreta .respon-nota textarea { font-size: var(--t-cos); line-height: 1.45; }
+.vesteix-dreta .nota-cap { font-size: var(--t-petit); }
+.vesteix-dreta .grup-notes { font-size: var(--t-peu); margin-top: var(--e3); }
+
+.pestanyes-peces { margin-bottom: var(--e2); }
+.segmentat button[aria-selected="true"] {
+  background: var(--superficie); color: var(--text);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12), 0 0 0 0.5px rgba(0, 0, 0, 0.04);
+}
+.pista-peces { margin: 0 0 var(--e3); }
+.galeria-peces { display: grid; grid-template-columns: repeat(auto-fill, minmax(116px, 1fr)); gap: var(--e2); }
+/* Les cartes són fosques (com un tros de vídeo) també en mode clar: el gràfic s'hi veu com al vídeo. */
+.carta-peca {
+  position: relative; aspect-ratio: 4 / 3; padding: 0; border: 0; border-radius: var(--radi-mitja); overflow: hidden;
+  background: linear-gradient(160deg, #48484a, #1c1c1e); color: #fff; cursor: pointer; text-align: left;
+  box-shadow: inset 0 0 0 0.5px rgba(255, 255, 255, 0.08);
+  transition: transform 100ms ease-out, box-shadow 120ms ease-out;
+}
+.carta-peca:hover { box-shadow: 0 0 0 2px var(--accent); }
+.carta-peca:active { transform: scale(0.97); }
+.carta-mostra { position: absolute; inset: 0; overflow: hidden; pointer-events: none; display: grid; place-items: center; }
+.carta-mostra > svg { width: 44%; height: auto; stroke: rgba(255, 255, 255, 0.92); stroke-width: 1.6; }
+.carta-nom {
+  position: absolute; left: var(--e2); right: var(--e2); bottom: 6px; font-size: var(--t-peu); font-weight: 600;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+}
+.de-biblioteca .carta-nom { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.escolta-carta {
+  position: absolute; top: 4px; right: 4px; width: 28px; height: 28px; border-radius: 50%;
+  display: grid; place-items: center; background: rgba(255, 255, 255, 0.18); cursor: pointer;
+}
+.escolta-carta:hover { background: rgba(255, 255, 255, 0.3); }
+.escolta-carta svg { width: 13px; height: 13px; fill: #fff; stroke: none; }
+.peu-peces { margin-top: var(--e3); }
+.peu-peces .boto.ample { width: 100%; }
+
+/* La llista de les peces del vídeo, per ordre */
+.cap-peces { display: flex; align-items: baseline; gap: var(--e1); margin: var(--e2) 0 var(--e2); font-size: var(--t-petit); font-weight: 600; color: var(--text-2); }
+.buit-peces { margin: 0; font-size: var(--t-ui); line-height: 1.45; color: var(--text-2); }
+.llista-peces { display: flex; flex-direction: column; gap: 2px; margin: 0 calc(-1 * var(--e2)); }
+.fila-peca {
+  display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; align-items: center; gap: var(--e3);
+  width: 100%; min-height: 44px; padding: var(--e1) var(--e2); border: 0; border-radius: var(--radi);
+  background: none; text-align: left; cursor: pointer;
+}
+.fila-peca:hover { background: var(--omplir); }
+.fila-peca:active { background: var(--omplir-fort); }
+.icona-peca { flex: none; width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; color: #fff; }
+.icona-peca svg { width: 16px; height: 16px; stroke-width: 2; }
+.peca-grafic .icona-peca { background: var(--c-grafic); }
+.peca-broll .icona-peca { background: var(--c-broll); }
+.peca-zoom .icona-peca { background: var(--c-zoom); }
+.peca-so .icona-peca { background: var(--c-so); }
+.fila-peca-text { display: flex; flex-direction: column; min-width: 0; line-height: 1.3; }
+.fila-peca-text strong { display: flex; align-items: center; gap: 6px; font-size: var(--t-ui); font-weight: 600; color: var(--text); }
+.fila-peca-text > span { font-size: var(--t-petit); color: var(--text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fila-peca-text > span.avis-peca, p.avis-peca { color: var(--proposta); }
+.temps-peca { font-size: var(--t-petit); color: var(--text-2); font-variant-numeric: tabular-nums; }
+.de-claude {
+  padding: 1px 6px; border-radius: 999px; background: var(--lila-suau); color: var(--lila-text);
+  font-size: 11px; font-weight: 600; line-height: 16px;
+}
+.peca .fila-fetes { margin-top: var(--e3); }
+.fila-tret { display: flex; align-items: center; gap: var(--e3); padding: var(--e2) 0; border-bottom: 1px solid var(--linia); }
+.fila-tret .fila-peca-text { flex: 1; opacity: 0.7; }
+.fila-tret .enllac { margin: 0; flex: none; }
+
+/* L'estil del vídeo: cartes de tot el vídeo (fotograma, títol, gràfic i subtítols) */
+.full.estils-full { width: min(1180px, calc(100vw - var(--e8))); max-height: calc(100vh - var(--e8)); overflow-y: auto; }
+.estils-full .cap-full { align-items: baseline; flex-wrap: wrap; }
+.estils-full .cap-full .detall { flex: 1 1 260px; font-variant-numeric: normal; }
+.estils-video { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(150px, 40vw), 1fr)); gap: var(--e4); margin-top: var(--e5); }
+@media (min-width: 1100px) { .estils-video { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+.peu-estils { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--e3); margin-top: var(--e5); }
+.peu-estils .amb-marca { margin: 0; }
+.carta-estil { display: flex; flex-direction: column; gap: 6px; padding: 0; border: 0; background: none; cursor: pointer; text-align: left; }
+.carta-estil-mostra {
+  position: relative; display: block; aspect-ratio: 9 / 16; border-radius: var(--radi-mitja); overflow: hidden;
+  background: linear-gradient(165deg, #5a5a5e, #1c1c1e) center / cover no-repeat;
+  box-shadow: 0 0 0 1px var(--linia); transition: box-shadow 150ms ease-out, transform 100ms ease-out;
+}
+.carta-estil:hover .carta-estil-mostra { box-shadow: 0 0 0 1px var(--linia), 0 4px 14px rgba(0, 0, 0, 0.18); }
+.carta-estil:active .carta-estil-mostra { transform: scale(0.97); }
+.carta-estil[aria-checked="true"] .carta-estil-mostra { box-shadow: 0 0 0 2px var(--fons), 0 0 0 4px var(--accent); }
+.carta-estil-nom { font-size: var(--t-ui); font-weight: 600; color: var(--text); }
+.carta-estil[aria-checked="true"] .carta-estil-nom { color: var(--accent-text); }
+.carta-estil[aria-checked="true"] .carta-estil-nom::after { content: " ✓"; }
+.amb-marca .enllac { margin: 0; font-size: var(--t-petit); }
+.caixa-a-tots { display: flex; align-items: center; flex-wrap: wrap; gap: var(--e3); }
+.caixa-a-tots p { margin: 0; font-size: var(--t-petit); color: var(--text-2); }
+.caixa-a-tots .enllac { margin: 0; font-size: var(--t-petit); }
+.peca-subtitols .icona-peca, .peca-titol .icona-peca { background: #636366; }
+
+/* L'editor de la peça triada */
+.cap-editor { display: flex; flex-direction: column; align-items: flex-start; gap: var(--e3); margin-bottom: var(--e4); }
+.cap-editor .tornar { margin: 0; }
+.titol-editor { display: flex; align-items: center; gap: var(--e2); width: 100%; }
+.titol-editor h2 { flex: 1; margin: 0; font-size: var(--t-cos); font-weight: 700; }
+.titol-editor .ves-hi { margin: 0; height: 24px; }
+.cos-editor { display: flex; flex-direction: column; gap: var(--e4); }
+.camp-peca { gap: 6px; }
+.camp-peca .valor { font-weight: 400; color: var(--text-2); font-variant-numeric: tabular-nums; }
+.camp-peca .ajuda-camp { margin: 0; }
+.camp-peca textarea.camp-text { resize: vertical; min-height: 44px; line-height: 1.4; }
+.estils-grafic { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--e2); }
+.estils-grafic .estil-mostra { aspect-ratio: 3 / 4; }
+.estils-grafic .nom-estil { font-size: var(--t-peu); color: var(--text-2); text-align: center; }
+.estils-grafic .estil[aria-checked="true"] .nom-estil { color: var(--accent-text); font-weight: 600; }
+.motiu-claude { margin: 0; padding: var(--e2) var(--e3); border-radius: var(--radi); background: var(--lila-suau); color: var(--lila-text); font-size: var(--t-petit); }
+.nota-grafic-vella { margin: 0; color: var(--proposta); }
+.mostra-broll-peca { display: block; height: 220px; aspect-ratio: 9 / 16; margin: 0 auto; border-radius: var(--radi-mitja); background: #000; object-fit: cover; }
+.sons-peca { display: flex; flex-wrap: wrap; gap: var(--e1); }
+.sons-peca .boto[aria-checked="true"] { background: var(--accent); color: #fff; }
+.accions-peca {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--e3);
+  margin-top: var(--e2); padding-top: var(--e4); border-top: 1px solid var(--linia);
+}
+.accions-peca .enllac { margin: 0; }
+.accions-peca { flex-wrap: wrap; }
+.accions-peca .perill { color: var(--auto); }
+.grafic-imatges { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e2); }
+.grafic-imatges[hidden] { display: none; }
+.foto-grafic { position: relative; width: 44px; height: 56px; }
+.foto-grafic img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 6px; box-shadow: inset 0 0 0 1px var(--linia); }
+.treu-foto {
+  position: absolute; top: -6px; right: -6px; width: 20px; height: 20px; padding: 0; border: 0; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+  background: var(--text); color: var(--superficie); box-shadow: 0 0 0 2px var(--superficie);
+}
+.treu-foto svg { width: 10px; height: 10px; stroke: currentColor; stroke-width: 2.4; fill: none; stroke-linecap: round; }
+.grafic-imatges .boto.petit { height: 28px; padding: 0 var(--e3); font-size: var(--t-petit); }
+.mg-host { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; pointer-events: none; }
+#tg-host { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+.interruptor:disabled { opacity: 0.45; cursor: default; }
+
+/* --- On es desa l'export, i l'avís de «fet» ------------------------------------ */
+
+.carpeta-final { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e1) var(--e2); margin: var(--e4) 0 0; font-size: var(--t-petit); color: var(--text-2); }
+.carpeta-final svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linejoin: round; }
+.carpeta-final .enllac { margin: 0; font-size: var(--t-petit); }
+.fet-export {
+  display: flex; align-items: center; gap: var(--e2); min-width: 0; padding: 0 var(--e1) 0 var(--e3);
+  height: 28px; border-radius: var(--radi); background: var(--accent-suau); font-size: var(--t-petit); color: var(--text);
+}
+.fet-export[hidden] { display: none; }
+.fet-export #fet-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fet-export .fet-marca { color: var(--accent-text); font-weight: 700; }
+.fet-export .enllac { margin: 0; font-size: var(--t-petit); white-space: nowrap; }
+.fet-export .icona { width: 22px; height: 22px; }
+
+/* --- Editar tocant el vídeo ----------------------------------------------------------- */
+
+.capa-edita {
+  grid-area: 1 / 1; position: relative; z-index: 3; pointer-events: none;
+  width: min(100cqw, calc(100cqh * 9 / 16)); aspect-ratio: 9 / 16;
+}
+.marc-capa {
+  position: absolute; pointer-events: auto; cursor: ns-resize; border-radius: 10px;
+  border: 1.5px dashed rgba(255, 255, 255, 0.95); box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35);
+}
+.marc-capa[hidden], .barra-capa[hidden] { display: none; }
+.barra-capa {
+  position: absolute; left: 8px; right: 8px; bottom: 8px; pointer-events: auto;
+  display: flex; flex-direction: column; gap: var(--e2); padding: var(--e2);
+  border-radius: var(--radi-mitja); background: var(--superficie); box-shadow: var(--ombra-gran);
+}
+.barra-capa.a-dalt { top: 8px; bottom: auto; }
+.barra-estils { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--e1); }
+.barra-estils .estil { padding: 0; border: 0; background: none; cursor: pointer; }
+.barra-estils .estil-mostra { display: block; width: 100%; aspect-ratio: 1; border-radius: var(--radi); }
+.barra-estils .estil-nom { display: none; }
+.barra-fila { display: flex; align-items: center; gap: var(--e2); }
+.barra-fila input[type="range"] { flex: 1; min-width: 40px; accent-color: var(--accent); }
+.barra-fila .enllac { margin: 0; font-size: var(--t-petit); white-space: nowrap; }
+.barra-fila .icona { width: 24px; height: 24px; }
+.barra-icona { font-size: var(--t-petit); font-weight: 600; color: var(--text-2); }
+.rodona {
+  flex: none; width: 22px; height: 22px; border-radius: 50%; padding: 0; cursor: pointer;
+  border: 0; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15);
+}
+.rodona[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--superficie), 0 0 0 4px var(--accent); }
+.pista-video { margin: 0 0 var(--e2); padding: var(--e2) var(--e3); border-radius: var(--radi); background: var(--accent-suau); font-size: var(--t-petit); color: var(--text); }
+.barra-estils.quatre { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.barra-estils .estil[aria-pressed="true"] .estil-mostra { box-shadow: 0 0 0 2px var(--superficie), 0 0 0 4px var(--accent); }
+.barra-fila .boto.petit { flex: 1; height: 26px; padding: 0 var(--e2); font-size: var(--t-petit); }
+.barra-fila .boto.petit[aria-pressed="true"] { background: var(--accent); color: #fff; }
+.barra-fila .decisio-tret[aria-pressed="true"] { background: var(--auto); }
+.barra-fila .bloc-color { display: inline-flex; align-items: center; justify-content: center; gap: var(--e1); }
+.mostra-bloc {
+  flex: none; position: relative; width: 12px; height: 18px; border-radius: 2px;
+  background: var(--color-bloc, #111);
+}
+.mostra-bloc::after { content: ""; position: absolute; left: 2px; right: 2px; bottom: 2px; height: 8px; background: #fff; opacity: 0.85; }
+.pantalla.editant .gran-play { display: none; }
+
+/* --- La visita guiada -------------------------------------------------------------------------- */
+
+.guia { position: fixed; inset: 0; z-index: 50; }
+.guia[hidden] { display: none; }
+.guia-forat {
+  position: fixed; border-radius: var(--radi-mitja); pointer-events: none;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.55), 0 0 0 2px rgba(255, 255, 255, 0.9);
+  transition: left 250ms var(--molla), top 250ms var(--molla), width 250ms var(--molla), height 250ms var(--molla);
+}
+.guia-bombolla {
+  position: fixed; padding: var(--e4); border-radius: var(--radi-mitja);
+  background: var(--superficie); box-shadow: var(--ombra-gran);
+  transition: left 250ms var(--molla), top 250ms var(--molla);
+}
+.guia-bombolla p { margin: 0 0 var(--e3); font-size: var(--t-cos); line-height: 1.4; color: var(--text); }
+.guia-accions { display: flex; align-items: center; gap: var(--e3); }
+.guia-pas { flex: 1; font-size: var(--t-petit); color: var(--text-2); }
+.guia-accions .enllac { margin: 0; }
+.ajuda-guia::before { content: ""; position: absolute; inset: -3px; }  /* es toca en 28 px */
+.ajuda-guia {
+  position: relative; flex: none; width: 22px; height: 22px; padding: 0; border: 0; border-radius: 50%; cursor: pointer;
+  background: var(--omplir); color: var(--text-2); font-size: 12px; font-weight: 600;
+}
+.fila-nom { display: flex; align-items: flex-start; gap: var(--e2); }
+.fila-nom h1 { flex: 1; min-width: 0; }
+.fila-nom .ajuda-guia { margin-top: 3px; }
+.ajuda-guia:hover { background: var(--omplir-fort); color: var(--text); }
+@media (prefers-reduced-motion: reduce) { .guia-forat, .guia-bombolla { transition: none; } }
+
+/* --- La teva marca, pas a pas ------------------------------------------------------------------ */
+
+.full.assistent { width: min(520px, calc(100vw - var(--e8))); max-height: calc(100vh - var(--e8)); overflow-y: auto; }
+.full.assistent h2 { margin: var(--e3) 0 var(--e4); font-size: var(--t-titol); font-weight: 600; }
+.passes-assistent { display: flex; gap: var(--e1); }
+.passes-assistent i { flex: 1; height: 4px; border-radius: 2px; background: var(--omplir-fort); }
+.passes-assistent i.fet { background: var(--accent); }
+.graella-assistent { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: var(--e3); margin-bottom: var(--e4); }
+.opcio-assistent {
+  display: flex; flex-direction: column; gap: var(--e2); align-items: flex-start; padding: var(--e3);
+  border: 0; border-radius: var(--radi-mitja); background: var(--omplir); cursor: pointer; text-align: left;
+  color: var(--text); transition: box-shadow 150ms ease-out, transform 100ms ease-out;
+}
+.opcio-assistent:hover { box-shadow: inset 0 0 0 1px var(--linia); }
+.opcio-assistent:active { transform: scale(0.98); }
+.opcio-assistent[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--accent); background: var(--accent-suau); }
+.rodones { display: flex; gap: 4px; }
+.rodones i { width: 20px; height: 20px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12); }
+.nom-opcio { font-size: var(--t-petit); font-weight: 500; }
+.lletres-opcio strong { font-size: 20px; line-height: 1.1; }
+.lletres-opcio span { font-size: var(--t-ui); color: var(--text-2); }
+.lletres-opcio em { font-size: 17px; }
+.grafic-opcio { align-items: stretch; }
+.mostra-grafic { display: block; position: relative; aspect-ratio: 4 / 3; border-radius: var(--radi); overflow: hidden;
+  background: linear-gradient(160deg, #5a5a5e, #2c2c2e); }
+.mostra-grafic > span { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+.colors-assistent { margin-top: var(--e3); }
+.full.assistent .camp-text { margin-bottom: var(--e4); }
+.oferta-marca {
+  display: flex; align-items: center; gap: var(--e3); width: 100%; margin: 0 0 var(--e3); padding: var(--e2) var(--e3);
+  border: 0; border-radius: var(--radi-mitja); background: var(--accent-suau); cursor: pointer; text-align: left;
+}
+.oferta-marca[hidden] { display: none; }
+.oferta-marca > span:last-child { display: flex; flex-direction: column; gap: 1px; font-size: var(--t-petit); color: var(--text-2); }
+.oferta-marca strong { font-size: var(--t-ui); color: var(--text); font-weight: 600; }
+.oferta-marca .mostra-estil { width: 34px; height: 34px; }
+
+/* --- Finestres estretes (al final: han de manar sobre les columnes de cada estació) --- */
+
+/* Una finestra estreta (el Safari al costat de l'app de Claude, per exemple). A Edita: el text i el vídeo, i la
+   columna de l'esquerra en un calaix que s'obre amb el botó de la barra del text (les estacions hi van a la barra).
+   A Vesteix: la galeria i el vídeo, i la peça i les notes a sota del vídeo. */
+/* --- El tauler de Vesteix ---------------------------------------------------------------------------
+   Totes les peces en targetes, cadascuna amb el seu tros de vídeo (app.js, pintaTauler). Ocupa el lloc del vídeo i de
+   la columna de la dreta; mentre es retoca el que és de tot el vídeo, tornen. */
+.tauler[hidden] { display: none !important; }
+body.vestint.amb-tauler { grid-template-columns: var(--amplada-galeria) minmax(0, 1fr); }
+body.vestint.amb-tauler .reproductor, body.vestint.amb-tauler .vesteix-dreta { display: none !important; }
+.tauler { grid-column: 2; height: 100vh; min-width: 0; display: flex; flex-direction: column; }
+.tauler-cap {
+  flex: none; display: flex; align-items: flex-end; flex-wrap: wrap; gap: var(--e3) var(--e4);
+  padding: var(--e5) var(--e6) var(--e3);
+}
+.tauler-titol { flex: 1 1 260px; min-width: 0; }
+.tauler-titol h2 { margin: 0; font-size: var(--t-titol); line-height: 1.2; display: flex; align-items: center; gap: var(--e2); }
+.xip-ronda {
+  font-size: var(--t-peu); font-weight: 700; color: var(--accent-text); background: var(--accent-suau);
+  padding: 2px 10px; border-radius: 99px;
+}
+.xip-ronda[hidden] { display: none; }
+.filtres-tauler .compte { margin-left: 3px; color: var(--text-3); font-weight: 500; }
+.accions-tauler { display: flex; align-items: center; gap: var(--e2); }
+.accions-tauler .feina .barra-progres { width: 56px; }
+.graella-tauler {
+  flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(188px, 1fr)); gap: var(--e4); align-content: start;
+  padding: var(--e2) var(--e6) var(--e6); transition: opacity 300ms ease-out, filter 300ms ease-out;
+}
+
+/* Mentre Claude prepara la ronda: les targetes, quietes i esvaïdes; al mig, un rètol. Quan arriba, a dalt, un avís
+   amb el que hi ha de nou, i les targetes hi entren d'una en una. */
+.tauler { position: relative; }
+.tauler.esperant .graella-tauler { opacity: 0.35; filter: saturate(0.4); pointer-events: none; }
+.esperant-ronda {
+  position: absolute; left: 50%; top: 42%; z-index: 5; transform: translate(-50%, -50%);
+  width: min(24rem, calc(100% - 2 * var(--e4))); display: flex; align-items: flex-start; gap: var(--e3);
+  padding: var(--e4) var(--e5); border-radius: var(--radi-mitja); background: var(--vidre);
+  box-shadow: 0 0 0 0.5px var(--linia), 0 12px 32px rgba(0, 0, 0, 0.14);
+  backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
+  animation: apareix 250ms ease-out;
+}
+.esperant-ronda[hidden] { display: none; }
+.esperant-ronda .roda-nota { width: 18px; height: 18px; margin-top: 2px; border-width: 2.5px; }
+.esperant-ronda strong { display: block; font-size: var(--t-cos); }
+.esperant-ronda .detall { display: block; margin: 2px 0 var(--e2); }
+.esperant-ronda .enllac { font-size: var(--t-ui); }
+.novetat-ronda {
+  flex: none; display: flex; align-items: flex-start; gap: var(--e3);
+  margin: 0 var(--e6) var(--e3); padding: var(--e3) var(--e2) var(--e3) var(--e4);
+  border-radius: var(--radi-mitja); background: var(--accent-suau); font-size: var(--t-ui);
+  animation: baixa-novetat 360ms var(--molla);
+}
+.novetat-ronda[hidden] { display: none; }
+.novetat-ronda > div { flex: 1; min-width: 0; padding-top: 3px; }
+.novetat-ronda strong { color: var(--accent-text); }
+.novetat-ronda .detall { margin: 2px 0 0; }
+.novetat-ronda .icona { flex: none; }
+@keyframes baixa-novetat { from { opacity: 0; transform: translateY(-6px); } }
+.graella-tauler.ronda-nova > * { animation: entra-carta 480ms var(--molla) both; animation-delay: calc(var(--i, 0) * 45ms); }
+@keyframes entra-carta { from { opacity: 0; transform: translateY(12px) scale(0.98); } }
+.xip-ronda.salta { animation: salta-xip 560ms var(--molla); }
+@keyframes salta-xip { 35% { transform: scale(1.2); } }
+@media (prefers-reduced-motion: reduce) {
+  .graella-tauler.ronda-nova > *, .xip-ronda.salta, .novetat-ronda, .esperant-ronda { animation: none; }
+}
+.buit-filtre { margin: 0 var(--e6) var(--e4); }
+.tauler-buit { margin: var(--e6) auto; max-width: 30rem; padding: var(--e8) var(--e6); text-align: center; }
+.tauler-buit h3 { margin: 0; font-size: var(--t-titol); }
+.tauler-buit .detall { margin: var(--e2) 0 var(--e5); font-size: var(--t-cos); }
+.tauler-buit .estat-ronda { margin-top: var(--e4); }
+
+.carta-tauler {
+  position: relative; min-width: 0; display: flex; flex-direction: column; gap: var(--e2);
+  padding: var(--e2) var(--e2) var(--e3); border-radius: var(--radi-mitja); background: var(--superficie);
+  box-shadow: 0 0 0 0.5px var(--linia), 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 150ms ease-out, opacity 150ms ease-out;
+}
+.carta-tauler.activa { box-shadow: 0 0 0 2px var(--accent), 0 6px 18px rgba(0, 113, 227, 0.16); }
+.carta-tauler.vot-no { opacity: 0.55; }
+.carta-tauler.vot-no.activa, .carta-tauler.vot-no:focus-within { opacity: 1; }
+.carta-cap { display: flex; align-items: center; gap: var(--e2); min-height: 20px; font-size: var(--t-peu); }
+.carta-cap .temps { font-weight: 700; color: var(--accent-text); font-variant-numeric: tabular-nums; }
+.tipus-peca { display: inline-flex; align-items: center; gap: 5px; min-width: 0; font-weight: 600; color: var(--text); }
+.tipus-peca span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tipus-peca i { flex: none; width: 8px; height: 8px; border-radius: 3px; background: var(--c-grafic); }
+.peca-broll .tipus-peca i, .peca-sticker .tipus-peca i { background: var(--c-broll); }
+.peca-zoom .tipus-peca i { background: var(--c-zoom); }
+.peca-so .tipus-peca i { background: var(--c-so); }
+.insignia { flex: none; margin-left: auto; padding: 1px 7px; border-radius: 99px; font-size: 11px; font-weight: 700; }
+.insignia[hidden] { display: none; }
+.insignia.nova { color: var(--accent-text); background: var(--accent-suau); }
+.insignia.canviada { color: var(--proposta); background: var(--proposta-suau); }
+.insignia.teva { color: var(--verd); background: var(--verd-suau); }
+
+/* El tros de vídeo: el fotograma (o el vídeo, a la que es mou) i, a sobre, les capes a 1080 × 1920. */
+.clip {
+  position: relative; aspect-ratio: 9 / 16; border-radius: var(--radi); overflow: hidden; isolation: isolate;
+  background: linear-gradient(165deg, #3a3a3c, #1c1c1e); cursor: pointer; outline: none;
+}
+.clip:focus-visible { box-shadow: 0 0 0 3px var(--focus); }
+.clip-fons { position: absolute; inset: 0; }
+.clip-media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform-origin: 50% 50%; }
+.clip-media[hidden] { display: none; }
+.clip-capa { z-index: 1; }
+.clip-capa > * { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+.clip-marca { position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; pointer-events: none; }
+.clip-marca:empty { display: none; }
+.ona-so { display: flex; align-items: center; gap: 4px; height: 44px; filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.5)); }
+.ona-so i { width: 5px; border-radius: 3px; background: #fff; animation: ona-so 1.1s ease-in-out infinite; }
+.ona-so i:nth-child(1), .ona-so i:nth-child(5) { height: 12px; }
+.ona-so i:nth-child(2), .ona-so i:nth-child(4) { height: 24px; animation-delay: 0.1s; }
+.ona-so i:nth-child(3) { height: 36px; animation-delay: 0.2s; }
+@keyframes ona-so { 0%, 100% { transform: scaleY(0.5); } 50% { transform: scaleY(1); } }
+.marc-zoom { width: 58%; fill: none; stroke: rgba(255, 255, 255, 0.85); stroke-width: 2.5; stroke-linecap: round;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.5)); }
+.activa .marc-zoom { opacity: 0; transition: opacity 300ms ease-out; }
+.clip-so {
+  position: absolute; right: 8px; bottom: 12px; z-index: 3; width: 30px; height: 30px; padding: 0; border: 0;
+  border-radius: 50%; display: grid; place-items: center; cursor: pointer; color: #fff;
+  background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+}
+.clip-so svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.clip-so[aria-pressed="true"] { background: var(--accent); }
+.clip-progres { position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; height: 3px; background: rgba(255, 255, 255, 0.25); opacity: 0; }
+.activa .clip-progres { opacity: 1; }
+.clip-progres i { display: block; width: 0; height: 100%; background: #fff; }
+.capturador { position: fixed; left: 0; top: 0; width: 2px; height: 2px; opacity: 0; pointer-events: none; }
+
+.carta-motiu { margin: 0; font-size: var(--t-peu); line-height: 1.35; color: var(--text-2); overflow-wrap: anywhere; }
+.carta-avis { margin: 0; font-size: var(--t-peu); color: var(--auto); }
+.carta-avis[hidden] { display: none; }
+.carta-accions { display: flex; flex-direction: column; gap: var(--e2); }
+.vots-carta { display: flex; width: 100%; }
+.vots-carta button { flex: 1; padding: 0; }
+.vots-carta button[data-vot="si"][aria-checked="true"] { background: var(--verd); color: var(--superficie); font-weight: 700; }
+.vots-carta button[data-vot="potser"][aria-checked="true"] { background: #ffcc00; color: #3d2a00; font-weight: 700; }
+.vots-carta button[data-vot="no"][aria-checked="true"] { font-weight: 700; }
+.carta-nota[hidden] { display: none; }
+.carta-nota .enllac { font-size: var(--t-peu); }
+.nota-carta { width: 100%; min-height: 44px; resize: none; font-size: var(--t-petit); line-height: 1.4; background: var(--proposta-suau); }
+/* La targeta que s'acaba de posar amb «+ Afegeix». */
+.carta-tauler.llum { animation: llum-nota 1.4s var(--molla); }
+.tria-alternativa { color: var(--accent-text); }
+
+/* Dues opcions per al mateix moment: juntes, en un requadre. */
+.grup-tauler {
+  grid-column: span 2; display: flex; flex-direction: column; gap: var(--e2); padding: var(--e2);
+  border-radius: calc(var(--radi-mitja) + 6px); background: var(--accent-suau); box-shadow: inset 0 0 0 1px rgba(0, 113, 227, 0.22);
+}
+.grup-cap { display: flex; justify-content: space-between; align-items: baseline; gap: var(--e2); padding: 2px var(--e1) 0; font-size: var(--t-petit); }
+.grup-cap span { flex: none; color: var(--text-2); }
+.grup-cartes { display: grid; grid-template-columns: 1fr 1fr; gap: var(--e2); }
+.grup-tauler .cap-de-les-dues { align-self: center; font-size: var(--t-peu); }
+
+/* La ronda següent: a baix, sempre a la vista. */
+.ronda {
+  flex: none; margin: 0 var(--e6) var(--e5); padding: var(--e2) var(--e2) var(--e2) var(--e4);
+  border-radius: var(--radi-mitja); background: var(--vidre); box-shadow: 0 0 0 0.5px var(--linia), 0 8px 24px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
+.ronda[hidden] { display: none; }
+.ronda-fila { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e2) var(--e3); }
+.ronda-estat { flex: none; display: flex; align-items: center; gap: var(--e3); }
+.ronda-demana { flex: 1 1 24rem; min-width: 0; display: flex; align-items: center; gap: var(--e3); }  /* si no hi cap, a sota */
+.ronda-fila .boto { flex: none; }
+.ronda .falten { flex: none; font-size: var(--t-ui); color: var(--text-2); }
+.ronda .falten b { color: var(--text); }
+#nota-ronda { flex: 1; min-width: 0; height: 34px; }
+.estat-ronda { margin: var(--e2) 0 var(--e1); }
+.estat-ronda.en-curs::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: 6px; border-radius: 50%;
+  background: var(--accent); animation: batec 1.2s ease-in-out infinite; vertical-align: 1px; }
+@keyframes batec { 50% { opacity: 0.3; } }
+.torna-tauler { margin: 0 var(--e1) 0 0; font-size: var(--t-ui); }
+@media (prefers-reduced-motion: reduce) { .ona-so i, .estat-ronda.en-curs::before { animation: none; } }
+
+@media (max-width: 1100px) and (min-width: 701px) {
+  body:not(.vestint):not(.revisant) { grid-template-columns: minmax(0, 1fr) var(--amplada-reproductor); }
+  body:not(.vestint):not(.revisant) .text { grid-column: 1; }
+  body:not(.vestint):not(.revisant) .reproductor { grid-column: 2; }
+  body:not(.vestint):not(.revisant) #divisor-barra { display: none; }
+  body:not(.vestint):not(.revisant) .barra {
+    display: block !important; position: fixed; z-index: 40; left: 0; top: 0; bottom: 0; width: min(320px, 86vw);
+    background: var(--fons); box-shadow: var(--ombra-gran); visibility: hidden;
+    transform: translateX(-104%); transition: transform 300ms var(--molla), visibility 0s linear 300ms;
+  }
+  body.calaix-obert:not(.vestint):not(.revisant) .barra { transform: none; visibility: visible; transition: transform 300ms var(--molla); }
+  body:not(.vestint):not(.revisant) .eines .estacions.sense-columna { display: inline-flex; }
+  body.vestint { grid-template-columns: 264px minmax(0, 1fr); overflow-y: auto; }
+  body.vestint .barra { grid-column: 1; grid-row: 1 / span 2; position: sticky; top: 0; height: 100vh; }
+  body.vestint .reproductor { grid-column: 2; grid-row: 1; height: 74vh; padding-left: var(--e6); padding-right: var(--e6); }
+  body.vestint .vesteix-dreta {
+    grid-column: 2; grid-row: 2; height: auto; border-left: 0; border-top: 1px solid var(--linia);
+    backdrop-filter: none; -webkit-backdrop-filter: none;
+  }
+  body.vestint .peca { flex: none; overflow: visible; }
+  body.vestint .vesteix-dreta .notes { max-height: none; }
+  body.vestint .vesteix-dreta .llista-notes { overflow: visible; }
+  body.vestint.amb-tauler { grid-template-columns: 264px minmax(0, 1fr); }
+  .tauler { grid-row: 1 / span 2; }
+}
+@media (max-width: 700px) {
+  /* Tot en una columna que baixa sencera (la pàgina fa de barra de desplaçament, no cada columna). */
+  html { height: auto; }
+  body, body.vestint { grid-template-columns: minmax(0, 1fr); height: auto; min-height: 100vh; overflow: visible; }
+  .barra, .text, .reproductor, .vesteix-dreta { grid-column: 1 !important; grid-row: auto !important; height: auto !important; }
+  .barra, .text { overflow: visible; }
+  .divisor, #commuta-barra, #commuta-reproductor { display: none; }
+  body:not(.vestint) .cap-estacions { display: none; }  /* a Edita, les estacions són a la barra del text */
+  .eines .estacions.sense-columna { display: inline-flex; }
+  body.sense-barra .barra, body.sense-reproductor .reproductor { display: block; }
+  body.sense-reproductor .reproductor { display: flex; }
+  /* Primer el vídeo, després el text i, al final, el que hi havia a l'esquerra. A Vesteix, primer la galeria. */
+  .reproductor { order: -1; height: 62vh !important; border-left: 0; }
+  body.vestint .barra { order: -2; position: static; }
+  .barra { order: 2; }
+  .vesteix-dreta { border-left: 0; border-top: 1px solid var(--linia); }
+  .peca { flex: none; overflow: visible; }
+  .vesteix-dreta .notes { max-height: none !important; }
+  .transcripcio { padding-bottom: var(--e8); }
+  body.vestint.amb-tauler { grid-template-columns: minmax(0, 1fr); }
+  .tauler { grid-column: 1 !important; height: auto; }
+  .graella-tauler { overflow: visible; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); padding: var(--e2) var(--e4) var(--e4); }
+  .tauler-cap { padding: var(--e4) var(--e4) var(--e2); }
+  .ronda { position: sticky; bottom: var(--e2); margin: 0 var(--e2) var(--e2); }
+  .esperant-ronda { position: fixed; top: 50%; }  /* la pàgina és llarga: al mig del que es veu */
+  .novetat-ronda { margin: 0 var(--e4) var(--e2); }
+  .ronda-demana { flex-wrap: wrap; }
+  #nota-ronda { order: 3; flex: 1 1 100%; }
+  .grup-tauler { grid-column: 1 / -1; }
+}
