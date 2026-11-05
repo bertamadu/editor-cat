@@ -1,4 +1,4 @@
-"""tallat: editor de reels en català, per paraules.
+"""editor-cat: editor de reels en català, per paraules.
 
 Ús (la primera vegada: ./prepara.sh, que instal·la tot el que cal):
   python tallat.py comprova                           (revisa que l'ordinador tingui tot el que cal)
@@ -162,7 +162,7 @@ def ordre_compara_temps(args) -> None:
     if r["grans"]:
         print("On més difereixen (escolta-ho per saber quin encerta):")
         for g in r["grans"]:
-            print(f"  {minuts_i_segons(g['nostre'])}  «{g['text']}»: tallat {g['nostre']:.2f} s, SRT {g['srt']:.2f} s")
+            print(f"  {minuts_i_segons(g['nostre'])}  «{g['text']}»: editor-cat {g['nostre']:.2f} s, SRT {g['srt']:.2f} s")
 
 
 def minuts_i_segons(t: float) -> str:
@@ -288,7 +288,7 @@ def ordre_instruccions(args) -> None:
     projecte = _carrega(args)
     trobades = projecte.detecta_instruccions()
     projecte.desa()
-    _mostra_instruccions(trobades) if trobades else print("No he trobat cap instrucció «Claude, …» ni «tallat, …».")
+    _mostra_instruccions(trobades) if trobades else print("No he trobat cap instrucció «Claude, …».")
 
 
 def ordre_afegeix(args) -> None:
@@ -379,7 +379,7 @@ def ordre_exporta(args) -> None:
 
 
 def ordre_comprova(args) -> None:
-    print("Comprovant tallat…")
+    print("Comprovant editor-cat…")
     resultats = comprova.comprovacions()
     print(comprova.informe(resultats))
     if any(estat == "error" for estat, _, _ in resultats):
@@ -845,7 +845,7 @@ def ordre_destaca(args) -> None:
     print("  " + "  ".join(f"{i}:{text}" for i, text in claus))
     triades = sorted(destacades.items())
     if triades:
-        print("Triades a mà (la resta les tria tallat): "
+        print("Triades a mà (la resta les tria editor-cat): "
               + ", ".join(f"{i} {'sí' if v else 'no'}" for i, v in triades))
     if not projecte.estil_subtitols().get("clau_grans"):
         print("Avís: el kit d'aquest vídeo no fa més grans les paraules destacades. "
@@ -922,7 +922,7 @@ def ordre_kit(args) -> None:
 def main() -> None:
     sys.stdout.reconfigure(line_buffering=True)  # que els missatges surtin al moment
     entorn.prepara()  # les eines que ha instal·lat prepara.sh (ffmpeg, Node), al davant del PATH
-    p = argparse.ArgumentParser(prog="tallat", description="Editor de reels en català, per paraules.")
+    p = argparse.ArgumentParser(prog="editor-cat", description="Editor de reels en català, per paraules.")
     sub = p.add_subparsers(dest="ordre", required=True)
 
     t = sub.add_parser("transcriu", help="Transcriu un vídeo amb temps per paraula")
@@ -958,7 +958,7 @@ def main() -> None:
     e.add_argument("--projecte", required=True)
     e.set_defaults(func=ordre_estat)
 
-    ins = sub.add_parser("instruccions", help="Detecta les instruccions de veu «Claude, …» o «tallat, …»")
+    ins = sub.add_parser("instruccions", help="Detecta les instruccions de veu «Claude, …»")
     ins.add_argument("--projecte", required=True)
     ins.set_defaults(func=ordre_instruccions)
 
@@ -991,13 +991,13 @@ def main() -> None:
     r1.add_argument("--projecte", required=True)
     r1.set_defaults(func=ordre_reel)
 
-    x = sub.add_parser("exporta", help="Exporta el vídeo tallat a MP4 vertical")
+    x = sub.add_parser("exporta", help="Exporta el vídeo editor-cat a MP4 vertical")
     x.add_argument("--projecte", required=True)
     x.add_argument("--qualitat", choices=list(exporta.QUALITATS), default="esborrany")
     x.add_argument("--sense-subtitols", action="store_true", help="Exporta sense subtítols")
     x.set_defaults(func=ordre_exporta)
 
-    co = sub.add_parser("comprova", help="Revisa que l'ordinador tingui tot el que necessita tallat")
+    co = sub.add_parser("comprova", help="Revisa que l'ordinador tingui tot el que necessita editor-cat")
     co.set_defaults(func=ordre_comprova)
 
     ed = sub.add_parser("editors", help="Prepara el muntatge per acabar-lo a Premiere, Final Cut, DaVinci o CapCut")
@@ -1098,7 +1098,7 @@ def main() -> None:
     de.add_argument("--projecte", required=True)
     de.add_argument("--si", type=int, nargs="+", metavar="ID", help="Paraules que han de sortir destacades")
     de.add_argument("--no", type=int, nargs="+", metavar="ID", help="Paraules que no han de sortir destacades")
-    de.add_argument("--automatic", action="store_true", help="Oblida les triades a mà: les tria totes tallat")
+    de.add_argument("--automatic", action="store_true", help="Oblida les triades a mà: les tria totes editor-cat")
     de.set_defaults(func=ordre_destaca)
 
     no = sub.add_parser("notes", help="Les notes que la persona deixa a la pàgina per a l'assistent")

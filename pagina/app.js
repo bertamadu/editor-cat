@@ -1,5 +1,5 @@
 "use strict";
-// tallat · pàgina de revisió. Tot passa en aquest ordinador: el servidor local desa cada canvi.
+// editor-cat · pàgina de revisió. Tot passa en aquest ordinador: el servidor local desa cada canvi.
 
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => [...document.querySelectorAll(s)];
@@ -762,11 +762,11 @@ function instalaText() {
 }
 
 // --- Paraules destacades ------------------------------------------------------------------------
-// Als subtítols, algunes paraules surten més grans i d'un altre color. tallat en tria soles; amb la
+// Als subtítols, algunes paraules surten més grans i d'un altre color. editor-cat en tria soles; amb la
 // barreta (o ⌘B) se'n poden afegir o treure (i Claude també ho pot fer amb «tallat.py destaca»).
 
 // Les destacades es veuen sempre: en negreta les que has triat tu, i una mica més gruixudes les que tria
-// tallat sol (n'hi ha moltes: en negreta, el text costava de llegir).
+// editor-cat sol (n'hi ha moltes: en negreta, el text costava de llegir).
 function marcaClaus() {
   const destacades = claus();
   const teves = estat?.destacades || {};
@@ -1447,7 +1447,7 @@ function bucle() {
 }
 
 // Si el vídeo que sona no avança durant més de 0,3 s (carrega, o un salt lent del Safari), surt la rodeta: que es
-// vegi que carrega i no sembli que tallat va malament. Per sota, no (a cada tall faria pampallugues). I mentre
+// vegi que carrega i no sembli que editor-cat va malament. Per sota, no (a cada tall faria pampallugues). I mentre
 // sona la còpia que salta de tros en tros (just després d'un canvi), el rètol diu que es prepara la que no salta.
 let carrega = { t: -1, des: 0, visible: false };
 function pintaCarrega() {
@@ -1850,7 +1850,7 @@ function desaEstils() {
   return cua;
 }
 
-// Torna una secció a l'estil de tallat (el que hi hagués pendent d'aquella secció, fora). Les d'un vídeo, a l'estil
+// Torna una secció a l'estil de editor-cat (el que hi hagués pendent d'aquella secció, fora). Les d'un vídeo, a l'estil
 // del kit (el dels altres vídeos): se'n treu el que aquest vídeo hi havia canviat.
 async function restableix(seccio, missatge) {
   if (SECCIONS_VIDEO.includes(seccio)) {
@@ -2093,7 +2093,7 @@ function instalaTitol() {
     ["t-fons-color", "fons_color"]]) {
     $(`#${id}`).addEventListener("input", (e) => canviaTitol({ [clau]: e.target.value.toUpperCase() }));
   }
-  $("#restableix-titol").addEventListener("click", () => restableix("titol", "El títol ha tornat a l'estil de tallat."));
+  $("#restableix-titol").addEventListener("click", () => restableix("titol", "El títol ha tornat a l'estil de editor-cat."));
 }
 
 // --- La columna de l'esquerra: l'inici i els panells --------------------------------------------
@@ -2319,7 +2319,7 @@ function instalaKits() {
     else {
       const duplica = accioNomKit === "duplica";
       accioKit("/api/kit/nou", { nom, copia_de: duplica ? kitActual : null },
-        `Estil «${nom}» creat${duplica ? "" : " (el de tallat)"}. Aquest vídeo ja el fa servir.`);
+        `Estil «${nom}» creat${duplica ? "" : " (el de editor-cat)"}. Aquest vídeo ja el fa servir.`);
     }
   });
   camp.addEventListener("keydown", (e) => { if (e.key === "Escape") { form.hidden = true; e.stopPropagation(); } });
@@ -2445,7 +2445,7 @@ const ambCalaix = () => ESTRETA.matches && !vestint && !revisant;
 function obreCalaix(obert) {
   document.body.classList.toggle("calaix-obert", obert);
   $("#commuta-barra").setAttribute("aria-pressed", String(obert));
-  $("#commuta-barra").title = obert ? "Tanca la columna de l'esquerra" : "Obre la columna de l'esquerra (el ritme i el que t'ha proposat tallat)";
+  $("#commuta-barra").title = obert ? "Tanca la columna de l'esquerra" : "Obre la columna de l'esquerra (el ritme i el que t'ha proposat editor-cat)";
 }
 
 function mostraColumna(nom, visible) {
@@ -2610,7 +2610,7 @@ function instalaEstil() {
     e.target.value = "";
     if (fitxer) pujaFont(fitxer);
   });
-  $("#restableix-estil").addEventListener("click", () => restableix("subtitols", "Has tornat a l'estil de tallat."));
+  $("#restableix-estil").addEventListener("click", () => restableix("subtitols", "Has tornat a l'estil de editor-cat."));
 }
 
 // Salta el que s'ha tret. Es crida a cada fotograma i també quan el vídeo avisa que
@@ -2894,7 +2894,7 @@ async function consultaFeina() {
       avis("El render ha fallat: " + feina.error, 6000);
     }
   } catch (e) {
-    avis("He perdut el contacte amb tallat. Torna a obrir la pàgina de revisió.", 6000);
+    avis("He perdut el contacte amb editor-cat. Torna a obrir la pàgina de revisió.", 6000);
     seguimentFeina(null);
   }
 }
@@ -3002,7 +3002,7 @@ function pintaReels() {
   if (P.reel_actual) {
     $("#nom-projecte").textContent = obert?.titol || P.nom;
     $("#marca").textContent = `De la gravació «${P.arrel}»`;
-    document.title = `${obert?.titol || P.nom} · tallat`;
+    document.title = `${obert?.titol || P.nom} · editor-cat`;
   }
   for (const e of P.errors_reels || []) avis(`reels.json: ${e}`, 6000);
   // Si encara no n'hi ha, no ocupa lloc; però dins d'un reel sempre hi és, per tornar al vídeo sencer
@@ -3274,7 +3274,7 @@ function instalaBroll() {
   $("#b-vora-kit").addEventListener("click", () =>
     canviaBroll({ vora_color: estilBroll.vora_color ? null : $("#b-vora-color").value.toUpperCase() }));
   $("#b-vora-color").addEventListener("input", (e) => canviaBroll({ vora_color: e.target.value.toUpperCase() }));
-  $("#restableix-broll").addEventListener("click", () => restableix("broll", "El b-roll ha tornat a l'estil de tallat."));
+  $("#restableix-broll").addEventListener("click", () => restableix("broll", "El b-roll ha tornat a l'estil de editor-cat."));
 }
 
 // Stickers en directe: mateixa posició, mida i rotació que tindran a l'export (les calcula el servidor:
@@ -5757,7 +5757,7 @@ function instalaTecles() {
 
 const PASSES_GUIA = [
   ["#tria-reel", "Aquí tries què edites: el vídeo sencer o un dels reels que t'ha proposat Claude."],
-  ["#seccio-revisar", "Aquí hi ha el que t'ha proposat tallat: les instruccions de veu i les paraules que potser vols treure."],
+  ["#seccio-revisar", "Aquí hi ha el que t'ha proposat editor-cat: les instruccions de veu i les paraules que potser vols treure."],
   [".text", `Això és el que dius. Toca una paraula per escoltar-la. Per treure'n, selecciona-les i prem ⌫. A sobre ` +
     `surt una barreta per destacar-les (${tecla("⌘B")}) o corregir-les (${tecla("↩")}).`],
   [".pantalla", "Aquí veus el vídeo tal com queda, amb els talls que fas al text."],
@@ -7258,7 +7258,7 @@ async function inicia() {
     avis("No puc carregar el projecte: " + e.message, 10000);
     return;
   }
-  document.title = `${P.nom} · tallat`;
+  document.title = `${P.nom} · editor-cat`;
   registre("inici", { navegador: navigator.userAgent, finestra: [innerWidth, innerHeight] });
   $("#nom-projecte").textContent = P.nom;
   $("#durada-original").textContent = fmt(P.durada);

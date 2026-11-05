@@ -1,4 +1,4 @@
-"""Comprova que l'ordinador té tot el que necessita tallat (`tallat.py comprova`).
+"""Comprova que l'ordinador té tot el que necessita editor-cat (`tallat.py comprova`).
 
 Cada comprovació diu «ok», «avís» (funcionarà, però hi ha alguna cosa a saber) o «error» (cal
 arreglar-ho), amb una explicació curta i què fer. Gairebé sempre, el que cal fer és tornar a
@@ -18,8 +18,8 @@ from pathlib import Path
 
 from motor import entorn
 
-ARREGLA = ("executa prepara.ps1 (des de la carpeta de tallat)" if entorn.WINDOWS
-           else "executa ./prepara.sh (des de la carpeta de tallat)")
+ARREGLA = ("executa prepara.ps1 (des de la carpeta de editor-cat)" if entorn.WINDOWS
+           else "executa ./prepara.sh (des de la carpeta de editor-cat)")
 MARQUES = {"ok": "✓", "avis": "!", "error": "✗"}
 
 
@@ -40,7 +40,7 @@ def _executa(ordre: list[str], temps: int = 60) -> subprocess.CompletedProcess |
 def _python() -> list[tuple]:
     v = sys.version_info
     estat = "ok" if v[:2] == (3, 11) else "avis"
-    detall = f"{platform.python_version()}" + ("" if estat == "ok" else " · tallat està provat amb la 3.11")
+    detall = f"{platform.python_version()}" + ("" if estat == "ok" else " · editor-cat està provat amb la 3.11")
     resultat = [(estat, "Python", detall)]
     falten = [p for p in ("whisperx", "torch", "torchaudio", "transformers", "numpy") if not _versio(p)]
     if falten:
@@ -73,7 +73,7 @@ def _ffmpeg() -> list[tuple]:
     if falten:
         return [("error", "ffmpeg", f"{versio} no porta {', '.join(falten)} → {ARREGLA}")]
     propi = Path(ffmpeg).parent in entorn.carpetes_eines()
-    return [("ok", "ffmpeg", f"{versio.split(' ')[0]}" + (" (de tallat)" if propi else f" ({ffmpeg})"))]
+    return [("ok", "ffmpeg", f"{versio.split(' ')[0]}" + (" (de editor-cat)" if propi else f" ({ffmpeg})"))]
 
 
 def _carpetes_npx() -> list[Path]:
@@ -156,5 +156,5 @@ def informe(resultats: list[tuple[str, str, str]]) -> str:
     if errors:
         linies.append(f"\nHi ha {errors} {'cosa' if errors == 1 else 'coses'} per arreglar. {ARREGLA[0].upper() + ARREGLA[1:]}.")
     else:
-        linies.append("\nTot a punt per fer servir tallat.")
+        linies.append("\nTot a punt per fer servir editor-cat.")
     return "\n".join(linies)

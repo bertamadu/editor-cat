@@ -1,5 +1,5 @@
 {
-  "_info": "Estil per defecte de tallat (neutre). Els teus kits d'estil són a ~/.tallat/kits/: canvia'ls allà (o a la pàgina de revisió), no aquí.",
+  "_info": "Estil per defecte de editor-cat (neutre). Els teus kits d'estil són a ~/.tallat/kits/: canvia'ls allà (o a la pàgina de revisió), no aquí.",
   "talls": {
     "_pausa_maxima": "Segons de silenci màxim entre paraules als projectes nous (0,25 talla més ràpid; 0,5 deixa respirar).",
     "pausa_maxima": 0.35
@@ -147,7 +147,7 @@
     "neteja": true,
     "_soroll": "Quant soroll de fons es treu: «suau», «mitja» o «fort» (com més fort, més risc que la veu soni estranya).",
     "soroll": "suau",
-    "_efectes": "Efectes de so: «cap», «pocs» (b-roll, stickers i títol) o «molts» (també les paraules destacades). Els fa tallat; els pots canviar pels teus a ~/.tallat/sons/.",
+    "_efectes": "Efectes de so: «cap», «pocs» (b-roll, stickers i títol) o «molts» (també les paraules destacades). Els fa editor-cat; els pots canviar pels teus a ~/.tallat/sons/.",
     "efectes": "pocs",
     "_volum_efectes": "Volum dels efectes, de 0 a 1.",
     "volum_efectes": 0.5

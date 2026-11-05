@@ -1,4 +1,4 @@
-﻿# tallat · prepara aquest Windows per fer servir tallat (el que fa prepara.sh al Mac).
+﻿# editor-cat · prepara aquest Windows per fer servir editor-cat (el que fa prepara.sh al Mac).
 #
 #   powershell -ExecutionPolicy Bypass -File prepara.ps1                instal·la el que falti (es pot tornar a executar)
 #   powershell -ExecutionPolicy Bypass -File prepara.ps1 -AmbWhisper    també el model de transcripció (3 GB)
@@ -7,7 +7,7 @@
 #   .tallat\bin      micromamba i uv (els instal·ladors)
 #   .tallat\eines    ffmpeg i Node.js (de conda-forge)
 #   .tallat\python   Python 3.11
-#   .tallat\venv     l'entorn de Python de tallat (WhisperX i companyia); .venv n'és un enllaç (junction)
+#   .tallat\venv     l'entorn de Python de editor-cat (WhisperX i companyia); .venv n'és un enllaç (junction)
 # A més, HyperFrames hi baixa el navegador amb què dibuixa els subtítols, i WhisperX el model de veu català.
 param([switch]$AmbWhisper)
 
@@ -31,7 +31,7 @@ function Pas($text) { Write-Host ""; Write-Host "▸ $text" }
 function Fet($text) { Write-Host "  ✓ $text" }
 function Falla($text) { Write-Host ""; Write-Host "✗ $text"; exit 1 }
 
-if (-not [Environment]::Is64BitOperatingSystem) { Falla "tallat necessita un Windows de 64 bits." }
+if (-not [Environment]::Is64BitOperatingSystem) { Falla "editor-cat necessita un Windows de 64 bits." }
 
 # Els camins, sempre literals (-LiteralPath): amb -Path, una carpeta com «Pau[1]» es llegiria com un patró.
 function Hi-Es($cami) { return Test-Path -LiteralPath $cami }
@@ -71,7 +71,7 @@ function Falla-Amb($text) {
 }
 
 [IO.Directory]::CreateDirectory($BIN) | Out-Null
-Write-Host "Preparant tallat a $CARPETA"
+Write-Host "Preparant editor-cat a $CARPETA"
 Write-Host "(la primera vegada baixa uns 2-3 GB i pot trigar 10-20 minuts)"
 
 Pas "1/6 · Instal·lador de paquets (micromamba)"
@@ -107,7 +107,7 @@ if (-not (Hi-Es $UV)) {
   Esborra $dins; Esborra $zip
 }
 # L'entorn va a .tallat\venv i .venv n'és un enllaç (una «junction», que a Windows no demana permisos): si
-# tallat s'actualitza, només cal refer l'enllaç. Si ja hi havia un .venv de debò, es queda on és.
+# editor-cat s'actualitza, només cal refer l'enllaç. Si ja hi havia un .venv de debò, es queda on és.
 $VENV = Join-Path $TALLAT "venv"
 $enllac = Get-Item -Force -ErrorAction SilentlyContinue -LiteralPath (Join-Path $CARPETA ".venv")
 if ($enllac -and -not $enllac.LinkType) { $VENV = $enllac.FullName }

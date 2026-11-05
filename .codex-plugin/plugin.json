@@ -1,13 +1,13 @@
 {
-  "name": "tallat-ca",
-  "version": "0.9.0-ca.1",
+  "name": "editor-cat",
+  "version": "0.9.0-cat.1",
   "author": {
     "name": "Ivet Anoro",
     "url": "https://github.com/ivetanoro"
   },
-  "homepage": "https://github.com/bertamadu/tallat-ca",
-  "repository": "https://github.com/bertamadu/tallat-ca",
-  "description": "Editor de reels en català, per paraules: transcriu, treu el farciment, proposa reels, hi posa subtítols, b-roll i stickers, i exporta en vertical. Tot en aquest ordinador. Versió modificada (amb línia de temps) de tallat, d'Ivet Anoro.",
+  "homepage": "https://github.com/bertamadu/editor-cat",
+  "repository": "https://github.com/bertamadu/editor-cat",
+  "description": "Editor de reels en català, per paraules: transcriu, treu el farciment, proposa reels, hi posa subtítols, b-roll i stickers, i exporta en vertical. Tot en aquest ordinador. Amb línia de temps. Versió modificada de editor-cat, d'Ivet Anoro.",
   "license": "AGPL-3.0-or-later",
   "keywords": [
     "vídeo",
@@ -20,13 +20,13 @@
     "./skills/"
   ],
   "interface": {
-    "displayName": "tallat",
+    "displayName": "editor-cat",
     "shortDescription": "Edita els teus reels en català tocant les paraules",
     "category": "Media",
     "defaultPrompt": [
-      "Instal·la tallat.",
-      "Edita aquest vídeo amb tallat."
+      "Instal·la editor-cat.",
+      "Edita aquest vídeo amb editor-cat."
     ]
   },
-  "displayName": "tallat-ca"
+  "displayName": "editor-cat"
 }

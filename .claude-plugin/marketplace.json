@@ -1,16 +1,16 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
-  "name": "tallat-ca",
+  "name": "editor-cat",
   "owner": {
-    "name": "Berta Madueño (versió modificada de tallat, d'Ivet Anoro)",
+    "name": "Berta Madueño (versió modificada de editor-cat, d'Ivet Anoro)",
     "url": "https://github.com/bertamadu"
   },
   "metadata": {
-    "description": "tallat-ca: versió modificada de tallat, l'editor de reels en català de codi obert que funciona dins de Claude."
+    "description": "editor-cat: editor de reels en català que funciona dins de Claude. Versió modificada de editor-cat, d'Ivet Anoro."
   },
   "plugins": [
     {
-      "name": "tallat-ca",
+      "name": "editor-cat",
       "source": "./",
       "description": "Editor de reels en català, per paraules: transcriu, treu el farciment, proposa reels, hi posa subtítols, b-roll i stickers, i exporta en vertical.",
       "category": "media",
@@ -22,7 +22,7 @@
         "edició"
       ],
       "skills": [
-        "./skills/tallat-ca"
+        "./skills/editor-cat"
       ]
     }
   ]

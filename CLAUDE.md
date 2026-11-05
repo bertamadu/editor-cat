@@ -1,4 +1,4 @@
-# tallat
+# editor-cat
 
 Editor de reels en català que funciona dins de Claude Code. Codi obert amb llicència AGPL v3 (fitxer LICENSE).
 

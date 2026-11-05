@@ -4,7 +4,7 @@ Escriu una carpeta a exports/ amb:
   NOM.fcpxml      Final Cut Pro (10.6 o més nou) i DaVinci Resolve (18 o més nou)
   NOM.xml         Premiere Pro (format XML de Final Cut 7, que Premiere importa)
   NOM.srt         els subtítols, en temps del muntatge
-  subtitols.mov   (opcional) els subtítols, el títol i els gràfics de tallat, amb el fons transparent
+  subtitols.mov   (opcional) els subtítols, el títol i els gràfics de editor-cat, amb el fons transparent
   LLEGEIX-ME.txt  com obrir-ho a cada editor, i a CapCut (que no importa projectes)
 
 Per a CapCut o iMovie, que no importen projectes d'altres editors, `exporta_trossos()` treu cada
@@ -18,7 +18,7 @@ Hi van els talls, els zooms, el b-roll i els stickers, cadascun a la seva pista.
 so són exactes al fotograma; les posicions dels stickers són aproximades (cada editor les
 interpreta una mica diferent). Amb l'encaix «difumina» (un vídeo horitzontal sencer, al mig), el
 fons difuminat es fa a part (recursos/fons-difuminat.mp4) i va en una pista a sota del vídeo,
-tallat igual.
+editor-cat igual.
 """
 from __future__ import annotations
 
@@ -267,7 +267,7 @@ def fcpxml(nom: str, video: Path, pla: dict, capa: Path | None = None) -> str:
                       f'{ajustos}{"".join(connectats[i])}</asset-clip>')
     return ('<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE fcpxml>\n<fcpxml version="1.10">\n'
             f'  <resources>\n    {chr(10).join("    " + r if j else r for j, r in enumerate(recursos))}\n  </resources>\n'
-            f'  <library>\n    <event name="tallat">\n      <project name="{_attr(nom)}">\n'
+            f'  <library>\n    <event name="editor-cat">\n      <project name="{_attr(nom)}">\n'
             f'        <sequence format="r1" duration="{t.fcp(pla["total"])}" tcStart="0s" tcFormat="NDF" '
             f'audioLayout="stereo" audioRate="48k">\n          <spine>\n'
             + "\n".join("            " + e for e in espina) +
@@ -397,7 +397,7 @@ def xmeml(nom: str, video: Path, pla: dict, capa: Path | None = None) -> str:
 LLEGEIX_ME = """Projecte de «{nom}» per acabar-lo en un altre editor
 ====================================================
 
-Aquesta carpeta té el muntatge de tallat: els talls, els zooms, el b-roll i els stickers,
+Aquesta carpeta té el muntatge de editor-cat: els talls, els zooms, el b-roll i els stickers,
 cadascun a la seva pista. El b-roll i els stickers són a «recursos». Els talls fan servir el
 vídeo original:
 
@@ -422,24 +422,24 @@ DaVinci Resolve
   2. Subtítols: importa «{nom}.srt» a la Media Pool i arrossega'l a la línia de temps.
 
 CapCut
-  CapCut no deixa importar projectes d'altres editors. A la pàgina de revisió de tallat, fes
+  CapCut no deixa importar projectes d'altres editors. A la pàgina de revisió de editor-cat, fes
   Final… → «Trossos per a CapCut o iMovie»: tindràs cada tros com un clip a part, en ordre.
 {fons}{capa}
-Els subtítols animats de tallat (estil, colors, animacions) no passen a cap editor amb el
+Els subtítols animats de editor-cat (estil, colors, animacions) no passen a cap editor amb el
 .srt: només el text i els temps. El títol del ganxo i els gràfics del pla només hi van amb
-la capa animada (a la pàgina, «Inclou-hi els subtítols i els gràfics de tallat»).
+la capa animada (a la pàgina, «Inclou-hi els subtítols i els gràfics de editor-cat»).
 """
 
 AMB_FONS = """
 Fons difuminat («recursos/fons-difuminat.mp4»)
   El vídeo és horitzontal i hi va sencer, al mig. El fons difuminat de dalt i de baix és a
-  la pista de sota del vídeo, tallat igual. Si allargues o escurces un tall, fes el mateix
+  la pista de sota del vídeo, editor-cat igual. Si allargues o escurces un tall, fes el mateix
   al fons (n'hi ha {marge} segons de més a cada banda).
 """
 
 AMB_CAPA = """
 Subtítols i gràfics animats («subtitols.mov»)
-  Són els subtítols, el títol del ganxo i els gràfics de tallat tal com surten al vídeo
+  Són els subtítols, el títol del ganxo i els gràfics de editor-cat tal com surten al vídeo
   final, amb el fons transparent. Ja són a la pista de dalt de tot del projecte. Si no els
   vols, esborra aquesta pista; si fas servir el .srt, no posis tots dos alhora.
 """
@@ -448,7 +448,7 @@ Subtítols i gràfics animats («subtitols.mov»)
 EFECTES = """
 Efectes de so: «efectes-de-so.wav» dura tot el muntatge, amb cada efecte al seu moment. Posa'l en
 una pista d'àudio, a l'inici (0:00). La neteja de la veu no hi va: aquí sona la veu original (el
-vídeo que exporta tallat sí que la porta neta).
+vídeo que exporta editor-cat sí que la porta neta).
 """
 
 
@@ -524,7 +524,7 @@ CapCut
   3. Selecciona'ls tots al panell de mitjans i arrossega'ls alhora a la línia de temps: queden
      un darrere l'altre. Si l'ordre no és bo, ordena el panell per nom i torna-hi.
   4. Per escurçar un tall, arrossega la vora del tros. Per allargar-lo (recuperar paraules),
-     fes-ho a tallat i torna a exportar els trossos: aquí no hi ha imatge de més.
+     fes-ho a editor-cat i torna a exportar els trossos: aquí no hi ha imatge de més.
   5. Subtítols: Text → Subtítols locals → Importa «{nom}.srt» (o fes servir els subtítols
      automàtics de CapCut).
 {recursos}
