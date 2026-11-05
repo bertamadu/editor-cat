@@ -1,11 +1,14 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "extraKnownMarketplaces": {
-    "tallat": {
-      "source": { "source": "directory", "path": "./" }
+    "tallat-ca": {
+      "source": {
+        "source": "directory",
+        "path": "./"
+      }
     }
   },
   "enabledPlugins": {
-    "tallat@tallat": true
+    "tallat-ca@tallat-ca": true
   }
 }

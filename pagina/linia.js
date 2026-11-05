@@ -79,7 +79,7 @@ async function carregaLinia() {
       img.src = r.miniatures.url;
     }
   } catch (e) {
-    avis("No he podido dibujar el sonido en la línea de tiempo: " + e.message, 6000);
+    avis("No he pogut dibuixar el so a la línia de temps: " + e.message, 6000);
     L.ona = new Uint8Array(0);
     L.veu = new Uint8Array(0);
   } finally {
@@ -205,7 +205,7 @@ function pintaLinia() {
       s.style.width = `${(s1 - s0) * L.pxs}px`;
       s.dataset.a = s0;
       s.dataset.b = s1;
-      s.title = `Silencio de ${fmtSegons(s1 - s0)}: tócalo para marcarlo`;
+      s.title = `Silenci de ${fmtSegons(s1 - s0)}: toca'l per marcar-lo`;
       el.append(s);
     }
     const propi = Math.round(((tram[4] || 0) - general) * 10) / 10;
@@ -219,7 +219,7 @@ function pintaLinia() {
       const vora = document.createElement("div");
       vora.className = `l-vora ${costat}`;
       vora.dataset.costat = costat;
-      vora.title = costat === "esq" ? "Arrastra para cambiar dónde empieza" : "Arrastra para cambiar dónde acaba";
+      vora.title = costat === "esq" ? "Arrossega per canviar on comença" : "Arrossega per canviar on acaba";
       el.append(vora);
     }
     video.append(el);
@@ -241,11 +241,11 @@ function pintaLinia() {
 function pecesDeLaPista(tipus) {
   if (tipus === "grafic") {
     const peces = graficsVisibles().map((g) => ({
-      id: g.id, classe: "grafic", inici: g.inici, final: g.final, nom: NOMS_GRAFIC[g.tipus] || "Gráfico",
-      titol: `${NOMS_GRAFIC[g.tipus] || "Gráfico"}: arrástralo para moverlo` }));
+      id: g.id, classe: "grafic", inici: g.inici, final: g.final, nom: NOMS_GRAFIC[g.tipus] || "Gràfic",
+      titol: `${NOMS_GRAFIC[g.tipus] || "Gràfic"}: arrossega'l per moure'l` }));
     if (titolMuntatge) {
       peces.push({ id: "titol", classe: "titol", inici: titolMuntatge.inici, final: titolMuntatge.final,
-        nom: "Título", titol: "El título gancho" });
+        nom: "Títol", titol: "El títol del ganxo" });
     }
     return peces;
   }
@@ -258,8 +258,8 @@ function pintaEinesLinia() {
   const sel = L.sel;
   const treu = $("#l-treu");
   treu.disabled = !sel;
-  treu.textContent = !sel ? "Quita" : sel.tipus === "tros" ? "Quita el trozo" : sel.tipus === "silenci" ? "Quita el silencio"
-    : "Quita lo marcado";
+  treu.textContent = !sel ? "Treu" : sel.tipus === "tros" ? "Treu el tros" : sel.tipus === "silenci" ? "Treu el silenci"
+    : "Treu el que has marcat";
   const tros = sel?.tipus === "tros" && trams[sel.k];
   $("#l-control-tros").hidden = !tros;
   if (tros) {
@@ -415,7 +415,7 @@ function treuSeleccioLinia() {
   }
   x = aFotograma(x);
   y = aFotograma(y);
-  if (y - x < 1 / fpsL() - 1e-6) { avis("Es demasiado corto: marca al menos un fotograma."); return; }
+  if (y - x < 1 / fpsL() - 1e-6) { avis("És massa curt: marca com a mínim un fotograma."); return; }
   // Un tros sencer: se'n treuen les paraules, com si es tragués al text (i el text diu el mateix que el vídeo).
   const paraules = sel.tipus !== "tros" ? [] : P.paraules.filter((p) => !esFora(p.id)
     && (p.inici + p.final) / 2 >= sel.a && (p.inici + p.final) / 2 <= sel.b).map((p) => p.id);
@@ -428,7 +428,7 @@ function treuSeleccioLinia() {
       }
       e.afegits_manuals = treuInterval(e.afegits_manuals, x, y);
     });
-    avis("Trozo quitado (sus palabras también salen quitadas en el texto)", 3000);
+    avis("Tros tret (les seves paraules també surten tretes al text)", 3000);
     L.sel = null;
     return;
   }
@@ -436,7 +436,7 @@ function treuSeleccioLinia() {
     e.talls_manuals = ajuntaInterval(e.talls_manuals, x, y);
     e.afegits_manuals = treuInterval(e.afegits_manuals, x, y);
   });
-  avis(sel.tipus === "tros" ? "Trozo quitado" : sel.tipus === "silenci" ? "Silencio quitado" : "Quitado", 2000);
+  avis(sel.tipus === "tros" ? "Tros tret" : sel.tipus === "silenci" ? "Silenci tret" : "Tret", 2000);
   L.sel = null;
 }
 
@@ -446,10 +446,10 @@ function parteixAlCursor() {
   const k = trosDe(m);
   const [a, b] = trams[k];
   const t = aFotograma(a + (m - acum[k]));
-  if (t - a < 1 / fpsL() - 1e-6 || b - t < 1 / fpsL() - 1e-6) { avis("Pon el cursor dentro de un trozo para partirlo."); return; }
+  if (t - a < 1 / fpsL() - 1e-6 || b - t < 1 / fpsL() - 1e-6) { avis("Posa el cursor dins d'un tros per partir-lo."); return; }
   canvia((e) => { e.partits = [...new Set([...(e.partits || []), t])].sort((p, q) => p - q); });
   L.sel = null;
-  avis("Trozo partido", 2000);
+  avis("Tros partit", 2000);
 }
 
 function canviaVolumTros(k, db) {
@@ -520,7 +520,7 @@ function instalaLinia() {
   $("#l-oblida").addEventListener("click", () => {
     canvia((e) => { e.talls_manuals = []; e.afegits_manuals = []; e.partits = []; e.volums = []; e.volum_veu = 0; });
     L.sel = null;
-    avis("Retoques quitados (⌘Z para recuperarlos)", 3000);
+    avis("Retocs trets (⌘Z per recuperar-los)", 3000);
   });
   $("#l-zoom").addEventListener("input", (e) => {
     const centre = mDe(scroll.scrollLeft + scroll.clientWidth / 2);

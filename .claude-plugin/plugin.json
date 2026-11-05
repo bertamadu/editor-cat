@@ -1,14 +1,14 @@
 {
-  "name": "tallat",
-  "displayName": "tallat",
-  "description": "Editor de reels en català, per paraules: transcriu, treu el farciment, proposa reels, hi posa subtítols, b-roll i stickers, i exporta en vertical. Tot en aquest ordinador.",
-  "version": "0.9.0",
+  "name": "tallat-ca",
+  "displayName": "tallat-ca",
+  "description": "Editor de reels en català, per paraules: transcriu, treu el farciment, proposa reels, hi posa subtítols, b-roll i stickers, i exporta en vertical. Tot en aquest ordinador. Versió modificada (amb línia de temps) de tallat, d'Ivet Anoro.",
+  "version": "0.9.0-ca.1",
   "author": {
     "name": "Ivet Anoro",
     "url": "https://github.com/ivetanoro"
   },
-  "homepage": "https://github.com/ivetanoro/tallat",
-  "repository": "https://github.com/ivetanoro/tallat",
+  "homepage": "https://github.com/bertamadu/tallat-ca",
+  "repository": "https://github.com/bertamadu/tallat-ca",
   "license": "AGPL-3.0-or-later",
   "keywords": [
     "vídeo",

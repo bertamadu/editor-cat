@@ -1,5 +1,5 @@
 ---
-name: tallat
+name: tallat-ca
 description: Editor de reels en català, per paraules. Fes-la servir quan algú vulgui editar un vídeo de cap parlant (talking head) amb tallat, treure'n el farciment, fer el primer muntatge d'una gravació llarga (proposar reels), revisar-lo a la pàgina de revisió o exportar-lo en vertical 9:16.
 ---
 
@@ -118,6 +118,7 @@ La marca diu com són els vídeos de la persona: els seus colors i lletres (cada
    - `paraules` són trossos d'ids **inclosos els extrems**, **en l'ordre en què han de sonar**. Pots canviar l'ordre de la gravació si el reel ho demana.
 4. Executa `reels` per validar-ho i veure'n la durada. Corregeix els errors que surtin.
    - A la pàgina de revisió, la persona també pot canviar l'ordre dels paràgrafs arrossegant-los per la nansa ⠿ (es desa a `edicio.json` → `ordre`, igual que el d'un reel).
+   - Amb **Línia de temps** (a dalt, a Edita) la persona veu els trossos del muntatge en una pista, com a CapCut: allarga o escurça un tros arrossegant-ne les vores (per fotogrames), el parteix al cursor (S), treu un tros, un silenci o un bocí marcat (⌫), canvia el volum d'un tros o de tota la veu i mou els gràfics en el temps. Es desa a `edicio.json` en segons de la gravació (`talls_manuals`, `afegits_manuals`, `partits`, `volums`, `volum_veu`) i ho respecten la vista prèvia, l'esborrany i l'export. No els esborris quan toquis l'edició: si canvies paraules, continuen valent.
 5. La persona els veu a la pàgina de revisió («Reels proposats») i en tria un, que s'obre ja muntat. També es pot crear amb `reel ID`.
 
 ### Criteris per triar

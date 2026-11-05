@@ -3,6 +3,8 @@
   <img src=".github/imatges/capcalera.jpg" alt="tallat. Edites el reel en el que et dura un cafè.">
 </picture>
 
+> **tallat-ca** és una versió modificada de [tallat](https://github.com/ivetanoro/tallat), d'**Ivet Anoro** (llicència AGPL v3 o posterior). Afegeix una **línia de temps** com la de CapCut per retocar el muntatge a mà. Què ha canviat: [AVIS.md](AVIS.md).
+
 tallat és un editor de reels en català que funciona dins de [Claude](https://claude.com/download) o de [Codex](https://openai.com/codex) (el de ChatGPT). Et graves parlant a càmera, li dius «edita aquest vídeo» i el retalles com si retallessis un text: les paraules que treus desapareixen del vídeo. Després hi poses subtítols animats, b-roll i stickers, i l'exportes en vertical, a punt per a Instagram, TikTok o YouTube Shorts.
 
 És gratuït, de codi obert i tot passa al teu ordinador.
@@ -55,11 +57,11 @@ tallat és un editor de reels en català que funciona dins de [Claude](https://c
 A l'app de Claude, a la pestanya **Code**, escriu al xat aquestes dues línies (d'una en una):
 
 ```
-/plugin marketplace add ivetanoro/tallat
-/plugin install tallat@tallat
+/plugin marketplace add bertamadu/tallat-ca
+/plugin install tallat-ca@tallat-ca
 ```
 
-Després escriu **«instal·la tallat»**.
+Després escriu **«instal·la tallat-ca»**.
 
 ### Opció 2: baixant la carpeta
 

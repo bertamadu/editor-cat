@@ -620,7 +620,7 @@
         </button>
       </div>
       <button class="boto" id="commuta-linia" aria-pressed="false" aria-controls="linia"
-              title="Los trozos del vídeo en una pista, para retocarlos a mano">Línea de tiempo</button>
+              title="Els trossos del vídeo en una pista, per retocar-los a mà">Línia de temps</button>
       <div class="espai"></div>
       <div class="feina" id="feina" hidden>
         <span id="feina-text">Construint…</span>
@@ -647,26 +647,26 @@
     </div>
 
     <!-- La línia de temps (linia.js): els trossos del muntatge en una pista, per retocar-los a mà. -->
-    <section class="linia" id="linia" aria-label="Línea de tiempo" hidden>
+    <section class="linia" id="linia" aria-label="Línia de temps" hidden>
       <div class="linia-eines">
-        <button class="boto" id="l-parteix" title="Parte el trozo donde está el cursor (S)">Parte</button>
-        <button class="boto" id="l-treu" title="Quita lo que has marcado (⌫)" disabled>Quita</button>
-        <label class="l-control" id="l-control-tros" hidden title="El volumen de este trozo">
-          <span>Volumen del trozo</span>
+        <button class="boto" id="l-parteix" title="Parteix el tros on hi ha el cursor (S)">Parteix</button>
+        <button class="boto" id="l-treu" title="Treu el que has marcat (⌫)" disabled>Treu</button>
+        <label class="l-control" id="l-control-tros" hidden title="El volum d'aquest tros">
+          <span>Volum del tros</span>
           <input type="range" id="l-volum-tros" min="-20" max="12" step="1">
           <span class="valor" id="l-volum-tros-text"></span>
         </label>
         <div class="espai"></div>
-        <label class="l-control" title="El volumen de toda la voz">
-          <span>Voz</span>
+        <label class="l-control" title="El volum de tota la veu">
+          <span>Veu</span>
           <input type="range" id="l-volum-veu" min="-20" max="12" step="1">
           <span class="valor" id="l-volum-veu-text"></span>
         </label>
-        <label class="l-control" title="Acércate para ver cada fotograma (también con ⌘ y la rueda)">
+        <label class="l-control" title="Apropa't per veure cada fotograma (també amb ⌘ i la roda)">
           <span>Zoom</span>
           <input type="range" id="l-zoom" min="0" max="1" step="0.01" value="0">
         </label>
-        <button class="icona" id="l-tanca" title="Cierra la línea de tiempo" aria-label="Cierra la línea de tiempo">
+        <button class="icona" id="l-tanca" title="Tanca la línia de temps" aria-label="Tanca la línia de temps">
           <svg viewBox="0 0 20 20"><path d="m5.5 5.5 9 9m0-9-9 9"/></svg>
         </button>
       </div>
@@ -678,9 +678,9 @@
           <div class="l-capcal" id="l-capcal" aria-hidden="true"></div>
         </div>
       </div>
-      <p class="detall l-ajuda" id="l-esborrany" hidden>Estás viendo el borrador. Para retocar, vuelve a <strong>Editando</strong> (encima del vídeo).</p>
-      <p class="detall l-ajuda" id="l-ajuda">Arrastra los bordes de un trozo para alargarlo o acortarlo. Arrastra dentro de un trozo para marcar un pedazo y quitarlo. Lo rayado son silencios: tócalos para marcarlos.
-        <button class="enllac" id="l-oblida" hidden>Quita todos los retoques a mano</button></p>
+      <p class="detall l-ajuda" id="l-esborrany" hidden>Estàs veient l'esborrany. Per retocar, torna a <strong>Editant</strong> (a sobre del vídeo).</p>
+      <p class="detall l-ajuda" id="l-ajuda">Arrossega les vores d'un tros per allargar-lo o escurçar-lo. Arrossega dins d'un tros per marcar-ne un bocí i treure'l. El que és ratllat són silencis: toca'ls per marcar-los.
+        <button class="enllac" id="l-oblida" hidden>Treu tots els retocs fets a mà</button></p>
     </section>
   </main>
 
